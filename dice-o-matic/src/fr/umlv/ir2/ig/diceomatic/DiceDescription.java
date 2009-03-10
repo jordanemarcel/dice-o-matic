@@ -1,4 +1,4 @@
-package fr.umlv.ig.misc;
+package fr.umlv.ir2.ig.diceomatic;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package fr.umlv.ig.misc;
+package fr.umlv.ir2.ig.diceomatic;
 
 public interface Dice {
 
