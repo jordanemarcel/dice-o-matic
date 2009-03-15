@@ -59,7 +59,7 @@ public class Main {
 						f.setEnabled(true);
 						f.setFocusableWindowState(true);
 						f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-						f.requestFocus;
+						f.requestFocus();
 					}
 
 					@Override
