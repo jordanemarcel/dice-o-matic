@@ -99,13 +99,6 @@ public class Main {
 					}
 				});
 				di.setVisible(true);
-				/*
-				JFrame hello = new JFrame("Test");
-				f.setEnabled(false);
-				f.setFocusableWindowState(false);
-				hello.setSize(100, 100);
-				hello.setLocation(50, 50);
-				hello.setVisible(true);*/
 			}
 		});
 		JMenuItem quitItem = new JMenuItem("Quit");
