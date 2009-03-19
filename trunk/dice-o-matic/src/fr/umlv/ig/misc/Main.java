@@ -29,10 +29,21 @@ public class Main {
 	
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		
-		
-		
 		dices.add(FairDice.class);
 		dices.add(FakeDice.class);
+		dices.add(OnlySixDice.class);
+		dices.add(FairDice.class);
+		dices.add(FakeDice.class);
+		dices.add(OnlySixDice.class);
+		dices.add(FairDice.class);
+		dices.add(FakeDice.class);
+		dices.add(OnlySixDice.class);
+		dices.add(FairDice.class);
+		dices.add(FakeDice.class);
+		dices.add(OnlySixDice.class);
+		dices.add(FairDice.class);
+		dices.add(FakeDice.class);
+		dices.add(OnlySixDice.class);
 		
 		final JFrame f = new JFrame("Dice'o'matic");
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
