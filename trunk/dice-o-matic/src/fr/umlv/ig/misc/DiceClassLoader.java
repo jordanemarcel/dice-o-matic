@@ -29,6 +29,13 @@ public class DiceClassLoader extends URLClassLoader{
 		return classFound;
 	}
 	public static boolean isDiceClass(Class<?> diceClass) throws IllegalArgumentException{
+		boolean haveDiceInterface=false;
+		for (Class<?> clazz :diceClass.getInterfaces()){
+			if(clazz.equals(Dice.class))
+				haveDiceInterface=true;
+		}
+		if(!haveDiceInterface)
+			throw new IllegalArgumentException("Any dice should implement Dice interface");
 		Constructor<?> constructors[] = diceClass.getConstructors();
 		if(constructors.length != 1)
 			throw new IllegalArgumentException("This Dice have more than one constructor.");
