@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class LoadDiceWindow {
-	private JFrame frame = new JFrame("New session");
+	/*private JFrame frame = new JFrame("New session");
 	private final DiceListModel diceModel = new DiceListModel();
 	public LoadDiceWindow() {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -77,5 +77,5 @@ public class LoadDiceWindow {
 		main.add(east,BorderLayout.EAST);
 		frame.setSize(400,200);
 		frame.setVisible(true);
-	}
+	}*/
 }
