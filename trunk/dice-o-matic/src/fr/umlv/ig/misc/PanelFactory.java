@@ -1,29 +1,31 @@
 package fr.umlv.ig.misc;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
-import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class PanelFactory {
 
-	public static JPanel newWorkspacePanel() {
+	public static JPanel newWorkspacePanel(final DiceModel model) {
 		JPanel newWorkspace = new JPanel();
 		newWorkspace.setLayout(new BorderLayout());
 		
@@ -32,7 +34,19 @@ public class PanelFactory {
 		//title.setFont(new Font("Arial",Font.BOLD,16));
 		//newWorkspace.add(title, BorderLayout.NORTH);
 		
-		JButton next = new JButton("Next");
+		JButton next = new JButton("Validate");
+		next.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JDialog dialog = new JDialog();
+				dialog.setTitle("Configure the dice");
+				dialog.setSize(200, 100);
+				dialog.setModalityType(Dialog.DEFAULT_MODALITY_TYPE);
+				dialog.setVisible(true);
+			}
+			
+		});
 		JPanel southPanel = new JPanel();
 		southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
 		southPanel.add(next);
@@ -50,14 +64,26 @@ public class PanelFactory {
 		Insets noSpace = new Insets(10,10,0,0);
 		Insets rightSpace = new Insets(10,10,0,10);
 		
-		
-		for(Class<? extends Dice> clazz: Main.dices) {
+		Iterator<Class <? extends Dice>> it = model.getIterator();
+		while(it.hasNext()) {
+			final Class<? extends Dice> clazz = it.next();
 			constraints.gridwidth = 1;
 			constraints.anchor = GridBagConstraints.BASELINE_LEADING;
 			constraints.insets = rightSpace;
 			DiceDescription description = clazz.getConstructors()[0].getAnnotation(DiceDescription.class);
 			scrollPanel.add(new JLabel(clazz.getSimpleName()), constraints);
-			JSpinner spin = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+			JSpinner spin = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1) {
+				private static final long serialVersionUID = 1L;
+				
+				@Override
+				protected void fireStateChanged() {
+					model.changeElement(clazz, (Integer)this.getValue());
+					for(ChangeListener cl: this.getChangeListeners()) {
+						cl.stateChanged(new ChangeEvent(this));
+					}
+				}
+				
+			});
 			constraints.gridwidth = GridBagConstraints.REMAINDER;
 			scrollPanel.add(spin, constraints);
 			constraints.insets = bottomSpace;

@@ -24,26 +24,11 @@ import javax.swing.WindowConstants;
 import sun.misc.ClassLoaderUtil;
 
 public class Main {
-	
-	public static final ArrayList<Class<? extends Dice>> dices = new ArrayList<Class<? extends Dice>>();
-	
+		
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		
-		dices.add(FairDice.class);
-		dices.add(FakeDice.class);
-		dices.add(OnlySixDice.class);
-		dices.add(FairDice.class);
-		dices.add(FakeDice.class);
-		dices.add(OnlySixDice.class);
-		dices.add(FairDice.class);
-		dices.add(FakeDice.class);
-		dices.add(OnlySixDice.class);
-		dices.add(FairDice.class);
-		dices.add(FakeDice.class);
-		dices.add(OnlySixDice.class);
-		dices.add(FairDice.class);
-		dices.add(FakeDice.class);
-		dices.add(OnlySixDice.class);
+		final DiceModel model = new DiceModel();
+		model.addElement(OnlySixDice.class);
 		
 		final JFrame f = new JFrame("Dice'o'matic");
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -54,8 +39,8 @@ public class Main {
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		title.setFont(new Font("Arial",Font.BOLD,30));
 		p.add(title, BorderLayout.NORTH);
-		ImageIcon ii = new ImageIcon(Main.class.getResource("splash.jpg"));
-		p.add(new JLabel(ii), BorderLayout.CENTER);
+		//ImageIcon ii = new ImageIcon(Main.class.getResource("splash.jpg"));
+		//p.add(new JLabel(ii), BorderLayout.CENTER);
 		JMenuBar menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem newWorkspace = new JMenuItem("New workspace");
@@ -63,7 +48,7 @@ public class Main {
 		newWorkspace.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				f.setContentPane(PanelFactory.newWorkspacePanel());
+				f.setContentPane(PanelFactory.newWorkspacePanel(model));
 				f.validate();
 			}
 		});

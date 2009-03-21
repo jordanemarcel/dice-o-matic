@@ -9,6 +9,7 @@ public class DiceClassLoader extends URLClassLoader{
 		super(urls);
 		// TODO Auto-generated constructor stub
 	}
+	
 	@Override
 	protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		Class<?> classFound = null;
@@ -28,7 +29,8 @@ public class DiceClassLoader extends URLClassLoader{
 		}
 		return classFound;
 	}
-	public static boolean isDiceClass(Class<?> diceClass) throws IllegalArgumentException{
+	
+	public static boolean isDiceClass(Class<?> diceClass) {
 		boolean haveDiceInterface=false;
 		for (Class<?> clazz :diceClass.getInterfaces()){
 			if(clazz.equals(Dice.class))
