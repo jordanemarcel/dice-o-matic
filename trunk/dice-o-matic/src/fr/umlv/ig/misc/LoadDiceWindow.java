@@ -13,6 +13,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,6 +42,7 @@ public class LoadDiceWindow {
 		});
 		JScrollPane jsp = new JScrollPane(diceList);
 		main.add(jsp,BorderLayout.CENTER);
+		main.add(new JLabel("Here is current loaded dice :"),BorderLayout.NORTH);
 		JPanel east = new JPanel(null);
 		east.setLayout(new GridBagLayout());
 		JButton addJar = new JButton("Add jar");
