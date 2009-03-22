@@ -2,33 +2,28 @@
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
-import sun.misc.ClassLoaderUtil;
-
 public class Main {
+	static boolean currentSession = false;
 		
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		
 		final DiceModel model = new DiceModel();
-		model.addElement(OnlySixDice.class);
 		
 		final JFrame f = new JFrame("Dice'o'matic");
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -48,12 +43,55 @@ public class Main {
 		newWorkspace.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				f.setContentPane(PanelFactory.newWorkspacePanel(model));
-				f.validate();
+				if(Main.currentSession) {
+					JOptionPane optionPane = new JOptionPane("Do you really want to start over again?", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+					final JDialog dialog = new JDialog();
+					dialog.setContentPane(optionPane);
+					dialog.setModal(true);
+					dialog.pack();
+					dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+					optionPane.addPropertyChangeListener(new PropertyChangeListener() {
+
+						@Override
+						public void propertyChange(PropertyChangeEvent evt) {
+							Integer value = (Integer)evt.getNewValue();
+							if(value==null)
+								return;
+							switch(value) {
+							case JOptionPane.YES_OPTION:
+								f.setContentPane(PanelFactory.newWorkspacePanel(new DiceModel()));
+								dialog.dispose();
+								f.validate();
+								break;
+							case JOptionPane.NO_OPTION:
+								dialog.dispose();
+								break;
+							}
+						}
+						
+					});
+					dialog.setVisible(true);
+				} else {
+					f.setContentPane(PanelFactory.newWorkspacePanel(model));
+					Main.currentSession = true;
+					f.validate();
+				}
 			}
 		});
 		
 		JMenuItem importItem = new JMenuItem("Import Dices");
+		importItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JDialog dialog = new JDialog();
+				dialog.setContentPane(PanelFactory.newJarImportPanel(dialog, model));
+				dialog.setModal(true);
+				dialog.pack();
+				dialog.setVisible(true);
+			}
+			
+		});
 		
 		JMenuItem quitItem = new JMenuItem("Quit");
 		quitItem.addActionListener(new ActionListener() {
