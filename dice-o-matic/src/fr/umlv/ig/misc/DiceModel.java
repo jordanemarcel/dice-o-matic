@@ -4,17 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.LinkedList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class DiceModel {
 	private final LinkedHashMap<Class<? extends Dice>, Integer> diceMap = new LinkedHashMap<Class<? extends Dice>, Integer>();
-
+	private final LinkedList<DiceListener> listenerList= new LinkedList<DiceListener>();
+	
 	public DiceModel() {
 		this.diceMap.put(FairDice.class, 0);
 		this.diceMap.put(FakeDice.class, 0);
@@ -23,6 +23,22 @@ public class DiceModel {
 	public int getSize() {
 		return diceMap.size();
 	}
+	
+	public void addDiceListener(DiceListener diceListener) {
+		listenerList.add(diceListener);
+	}
+	
+	protected void fireElementAdded() {
+		for(DiceListener diceListener: listenerList) {
+			diceListener.elementAdded();
+		}
+	}
+	
+	public Object getElementAt(int index) {
+		if(index>=this.getSize())
+			throw new ArrayIndexOutOfBoundsException("Trying to access an object out of bounds!");
+		return diceMap.keySet().toArray()[index];
+	}
 
 	public void addElement(Class<? extends Dice> diceClass) {
 		if(!DiceClassLoader.isDiceClass(diceClass))
@@ -30,7 +46,7 @@ public class DiceModel {
 		if(this.contains(diceClass))
 			throw new IllegalArgumentException("The class "+diceClass+" is already loaded in the model.");
 		diceMap.put(diceClass, 0);
-		//FIRE!!!
+		fireElementAdded();
 	}
 
 	public void changeElement(Class<? extends Dice> diceClass, int value) {
@@ -39,7 +55,7 @@ public class DiceModel {
 		diceMap.put(diceClass, value);
 		System.out.println("New value: "+value);
 		System.out.println("for class: "+diceClass);
-		//FIRE!!!
+		fireElementAdded();
 	}
 
 	public Iterator<Class<? extends Dice>> getIterator() {
@@ -60,10 +76,10 @@ public class DiceModel {
 		return false;
 	}
 
-
-
 	@SuppressWarnings("unchecked")
 	public void addJar(String jarAbsolutePath){
+		this.addElement(OnlySixDice.class);
+		
 		File file = new File(jarAbsolutePath);
 		if(!file.isAbsolute() || !file.isFile()){
 			throw new IllegalArgumentException("This should be an absolute path to a file.");
