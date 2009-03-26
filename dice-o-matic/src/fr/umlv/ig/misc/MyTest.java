@@ -7,7 +7,7 @@ public class MyTest {
 		
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//f.setContentPane(PanelFactory.createSessionPanel());
+		f.setContentPane(PanelFactory.createSessionPanel());
 		
 		f.setSize(600, 400);
 		f.setVisible(true);
