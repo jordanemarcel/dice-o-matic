@@ -24,8 +24,7 @@ public class LoadDiceWindow {
 	private final DiceListModel diceModel = new DiceListModel();
 	public LoadDiceWindow() {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		JPanel main = (JPanel)frame.getContentPane();
-		main.setLayout(new BorderLayout());
+		
 		final JList diceList = new JList(diceModel);
 		diceList.setCellRenderer(new DefaultListCellRenderer(){
 			private static final long serialVersionUID = 1L;
@@ -41,10 +40,8 @@ public class LoadDiceWindow {
 			}
 		});
 		JScrollPane jsp = new JScrollPane(diceList);
-		main.add(jsp,BorderLayout.CENTER);
-		main.add(new JLabel("Here is current loaded dice :"),BorderLayout.NORTH);
-		JPanel east = new JPanel(null);
-		east.setLayout(new GridBagLayout());
+		
+		
 		JButton addJar = new JButton("Add jar");
 		addJar.addActionListener(new ActionListener(){
 			@Override
@@ -66,6 +63,7 @@ public class LoadDiceWindow {
 				frame.dispose();
 			}
 		});
+		JPanel east = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill=GridBagConstraints.HORIZONTAL;
 		gbc.gridwidth=GridBagConstraints.REMAINDER;
@@ -74,6 +72,10 @@ public class LoadDiceWindow {
 		east.add(close,gbc);
 		gbc.weighty=1;
 		east.add(new JPanel(),gbc);
+		JPanel main = (JPanel)frame.getContentPane();
+		main.setLayout(new BorderLayout());
+		main.add(jsp,BorderLayout.CENTER);
+		main.add(new JLabel("Here is current loaded dice :"),BorderLayout.NORTH);
 		main.add(east,BorderLayout.EAST);
 		frame.setSize(400,200);
 		frame.setVisible(true);

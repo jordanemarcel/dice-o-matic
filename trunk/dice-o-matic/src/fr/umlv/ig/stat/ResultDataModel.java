@@ -6,4 +6,5 @@ public interface ResultDataModel {
 	public int getDiceCount();
 	public int getThrowCount();
 	public List<Integer> getResultForDice(int index);
+	
 }
