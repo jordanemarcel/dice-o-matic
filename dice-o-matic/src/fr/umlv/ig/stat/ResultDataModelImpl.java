@@ -3,6 +3,11 @@ package fr.umlv.ig.stat;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+
+import com.sun.org.apache.bcel.internal.generic.SIPUSH;
+
 public class ResultDataModelImpl implements ResultDataModel{
 	private final List<DiceResult> diceResults;
 	private final int nbThrow;
