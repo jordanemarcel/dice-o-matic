@@ -2,6 +2,8 @@ package fr.umlv.ig.misc;
 
 public interface DiceListener {
 	
-	public void elementAdded();
+	public void diceValueChanged();
+	
+	public void diceAdded();
 	
 }

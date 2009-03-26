@@ -4,33 +4,73 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class DiceModel {
 	private final LinkedHashMap<Class<? extends Dice>, Integer> diceMap = new LinkedHashMap<Class<? extends Dice>, Integer>();
-	private final LinkedList<DiceListener> listenerList= new LinkedList<DiceListener>();
+	private final LinkedList<DiceListener> jarListenerList= new LinkedList<DiceListener>();
+	private final LinkedList<DiceListener> spinnerListenerList= new LinkedList<DiceListener>();
+	
+	private boolean firing = false;
 	
 	public DiceModel() {
 		this.diceMap.put(FairDice.class, 0);
-		this.diceMap.put(FakeDice.class, 0);
+		//this.diceMap.put(FakeDice.class, 0);
 	}
 
 	public int getSize() {
 		return diceMap.size();
 	}
 	
-	public void addDiceListener(DiceListener diceListener) {
-		listenerList.add(diceListener);
+	public void addJarDiceListener(DiceListener diceListener) {
+		jarListenerList.add(diceListener);
+	}
+	
+	public void addSpinnerDiceListener(DiceListener diceListener) {
+		spinnerListenerList.add(diceListener);
+	}
+	
+	public void newSession() {
+		Iterator<Class<? extends Dice>> it = this.getIterator();
+		while(it.hasNext()) {
+			Class<? extends Dice> diceClass = it.next();
+			diceMap.put(diceClass, 0);
+		}
+		if(firing)
+			throw new IllegalStateException();
+		spinnerListenerList.clear();
+		fireElementAdded();
 	}
 	
 	protected void fireElementAdded() {
-		for(DiceListener diceListener: listenerList) {
-			diceListener.elementAdded();
+		try {
+			firing = true;
+			for(DiceListener diceListener: jarListenerList) {
+				diceListener.diceAdded();
+			}
+		}
+		finally {
+			firing = false;
+		}
+	}
+	
+	protected void fireDiceValueChanged() {
+		try {
+			firing = true;
+			for(DiceListener diceListener: spinnerListenerList) {
+				System.out.println("Model: CHAAAAAAANGE!!!!");
+				diceListener.diceValueChanged();
+			}
+		}
+		finally {
+			firing = false;
 		}
 	}
 	
@@ -55,7 +95,7 @@ public class DiceModel {
 		diceMap.put(diceClass, value);
 		System.out.println("New value: "+value);
 		System.out.println("for class: "+diceClass);
-		fireElementAdded();
+		fireDiceValueChanged();
 	}
 
 	public Iterator<Class<? extends Dice>> getIterator() {
@@ -77,16 +117,14 @@ public class DiceModel {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void addJar(String jarAbsolutePath){
-		this.addElement(OnlySixDice.class);
-		
+	public void addJar(String jarAbsolutePath) {
 		File file = new File(jarAbsolutePath);
 		if(!file.isAbsolute() || !file.isFile()){
 			throw new IllegalArgumentException("This should be an absolute path to a file.");
 		}
 		JarFile jf;
 		try {
-			jf = new JarFile("/home/nex/workspace/dice-o-matic/dice.jar");
+			jf = new JarFile(file);
 			Enumeration<JarEntry> entries = jf.entries();
 			ArrayList<String> classes = new ArrayList<String>();
 			while (entries.hasMoreElements()){

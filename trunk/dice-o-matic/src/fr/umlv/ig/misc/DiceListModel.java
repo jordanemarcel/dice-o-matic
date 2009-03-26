@@ -11,12 +11,17 @@ public class DiceListModel extends AbstractListModel {
 		DiceListener diceListener = new DiceListener() {
 
 			@Override
-			public void elementAdded() {
+			public void diceValueChanged() {
+				
+			}
+
+			@Override
+			public void diceAdded() {
 				fireContentsChanged(this, 0, model.getSize());
 			}
 
 		};
-		model.addDiceListener(diceListener);
+		model.addJarDiceListener(diceListener);
 	}
 
 	@Override

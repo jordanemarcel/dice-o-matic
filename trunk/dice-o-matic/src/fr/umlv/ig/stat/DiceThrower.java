@@ -8,9 +8,11 @@ import fr.umlv.ig.misc.Dice;
 
 public class DiceThrower {
 	private final List<Dice> dices;
+	
 	public DiceThrower(Dice...dices) {
 		this.dices=Arrays.asList(dices);
 	}
+	
 	public List<DiceResult> throwDices(int throwCount){
 		List<DiceResult> results = new LinkedList<DiceResult>();
 		for(Dice dice: dices){
