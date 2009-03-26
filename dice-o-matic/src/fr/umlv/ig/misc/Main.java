@@ -1,4 +1,4 @@
- package fr.umlv.ig.misc;
+package fr.umlv.ig.misc;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -59,7 +59,8 @@ public class Main {
 								return;
 							switch(value) {
 							case JOptionPane.YES_OPTION:
-								f.setContentPane(PanelFactory.newWorkspacePanel(new DiceModel()));
+								model.newSession();
+								f.setContentPane(PanelFactory.newWorkspacePanel(model));
 								dialog.dispose();
 								f.validate();
 								break;
@@ -87,7 +88,7 @@ public class Main {
 				JDialog dialog = new JDialog();
 				dialog.setContentPane(PanelFactory.newJarImportPanel(dialog, model));
 				dialog.setModal(true);
-				dialog.pack();
+				dialog.setSize(300, 200);
 				dialog.setVisible(true);
 			}
 			
