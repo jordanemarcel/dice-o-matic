@@ -23,7 +23,6 @@ public class DiceSpinnerNumberModel extends SpinnerNumberModel {
 
 			@Override
 			public void diceValueChanged() {
-				System.out.println("IVE CHANGED!");
 				fireStateChanged();
 			}
 			
@@ -34,14 +33,12 @@ public class DiceSpinnerNumberModel extends SpinnerNumberModel {
 	@Override
 	protected void fireStateChanged() {
 		for(ChangeListener cl: this.getChangeListeners()) {
-			System.out.println("Yoyo");
-			//cl.stateChanged(new ChangeEvent(this));
+			cl.stateChanged(new ChangeEvent(this));
 		}
 	}
 	
 	@Override
 	public Object getNextValue() {
-		System.out.println("NEXT VALUE");
 		int nextValue = this.getNumber().intValue()+this.getStepSize().intValue();
 		return nextValue;
 		
@@ -73,7 +70,8 @@ public class DiceSpinnerNumberModel extends SpinnerNumberModel {
 	
 	@Override
 	public void setValue(Object value) {
-		System.out.println("SET VALUE");
+		if((Integer)value==this.getNumber())
+			return;
 		if(isInBounds((Integer)value)) {
 			model.changeElement(diceClass, (Integer)value);
 		}
