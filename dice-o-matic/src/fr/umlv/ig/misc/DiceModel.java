@@ -22,7 +22,7 @@ public class DiceModel {
 	
 	public DiceModel() {
 		this.diceMap.put(FairDice.class, 0);
-		//this.diceMap.put(FakeDice.class, 0);
+		this.diceMap.put(FakeDice.class, 0);
 	}
 
 	public int getSize() {
@@ -65,7 +65,6 @@ public class DiceModel {
 		try {
 			firing = true;
 			for(DiceListener diceListener: spinnerListenerList) {
-				System.out.println("Model: CHAAAAAAANGE!!!!");
 				diceListener.diceValueChanged();
 			}
 		}

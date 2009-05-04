@@ -50,11 +50,18 @@ public class PanelFactory {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JDialog dialog = new JDialog();
-				dialog.setTitle("Configure the dice");
-				dialog.setSize(200, 100);
-				dialog.setModalityType(Dialog.DEFAULT_MODALITY_TYPE);
-				dialog.setVisible(true);
+				Iterator<Class<? extends Dice>> iterator = model.getIterator();
+				while(iterator.hasNext()) {
+					Class<? extends Dice> diceClass = iterator.next();
+					int count = model.getDiceNumber(diceClass);
+					for(int i=1;i<=count;i++) {
+						JDialog dialog = new JDialog();
+						dialog.setTitle("Configuration of "+diceClass.getSimpleName()+": "+i+"/"+count);
+						dialog.setSize(400, 300);
+						dialog.setModalityType(Dialog.DEFAULT_MODALITY_TYPE);
+						dialog.setVisible(true);
+					}
+				}
 			}
 
 		});
