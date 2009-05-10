@@ -81,9 +81,9 @@ public class DiceModel {
 
 	public void addElement(Class<? extends Dice> diceClass) {
 		if(!DiceClassLoader.isDiceClass(diceClass))
-			throw new IllegalArgumentException("The class "+diceClass+" is not inherited from "+Dice.class);
+			return;
 		if(this.contains(diceClass))
-			throw new IllegalArgumentException("The class "+diceClass+" is already loaded in the model.");
+			return;
 		diceMap.put(diceClass, 0);
 		fireElementAdded();
 	}
@@ -92,11 +92,18 @@ public class DiceModel {
 		if(diceMap.get(diceClass)==null)
 			throw new IllegalStateException("Can't change the value of "+diceClass+". The class does not exist in the model.");
 		diceMap.put(diceClass, value);
-		System.out.println("New value: "+value);
-		System.out.println("for class: "+diceClass);
+		
 		fireDiceValueChanged();
 	}
-
+	public int getTotalDiceNumber(){
+		Iterator<Class<? extends Dice>> it = getIterator();
+		int sum = 0;
+		while(it.hasNext()){
+			Integer i = diceMap.get(it.next());
+			sum = sum + i;
+		}
+		return sum;
+	}
 	public Iterator<Class<? extends Dice>> getIterator() {
 		return diceMap.keySet().iterator();
 	}
@@ -144,12 +151,14 @@ public class DiceModel {
 					Class<? extends Dice> toAdd = (Class<? extends Dice>)loader.loadClass("fr.umlv.ig.misc."+clazz);
 					addElement(toAdd);
 				} catch (ClassNotFoundException e) {
-					//This should no be possible, unless 
-					//a non-class file has an extension .class
+					continue;
+					//That mean that the class is not in the good packet
+				} catch (NoClassDefFoundError e){
+					continue;
 				}
 			}
 		} catch (IOException e) {
-			//TODO 
+			//nothing to do the file just don't exist
 		}
 	}
 }
