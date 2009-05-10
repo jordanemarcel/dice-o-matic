@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -596,7 +597,7 @@ public class PanelFactory {
 		title.add(close,BorderLayout.EAST);
 		JLabel name = new JLabel("Graph : "+graphTitle);
 		name.setForeground(Color.WHITE);
-		name.setMinimumSize(name.getPreferredSize());
+		name.setPreferredSize(new Dimension(0,0));
 		title.add(name,BorderLayout.CENTER);
 		panel.add(title,BorderLayout.NORTH);
 		JScrollPane jsp = new JScrollPane(component);
