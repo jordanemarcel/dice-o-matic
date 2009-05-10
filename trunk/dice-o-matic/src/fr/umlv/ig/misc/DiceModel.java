@@ -22,6 +22,14 @@ public class DiceModel {
 		this.diceMap.put(FairDice.class, 0);
 		this.diceMap.put(FakeDice.class, 0);
 	}
+	
+	public void reset() {
+		Iterator<Class<? extends Dice>> it = this.getIterator();
+		while(it.hasNext()) {
+			Class<? extends Dice> clazz = it.next();
+			this.diceMap.put(clazz, 0);
+		}
+	}
 
 	public int getSize() {
 		return diceMap.size();
