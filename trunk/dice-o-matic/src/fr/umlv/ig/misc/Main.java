@@ -49,7 +49,7 @@ public class Main {
 					int value = JOptionPane.showConfirmDialog(f,"Do you really want to start over again?","Question",JOptionPane.YES_NO_OPTION);
 					switch(value) {
 					case JOptionPane.YES_OPTION:
-						f.setContentPane(PanelFactory.newWorkspacePanel(f,new DiceModel()));
+						f.setContentPane(PanelFactory.newWorkspacePanel(f,model));
 						f.validate();
 						break;
 					case JOptionPane.NO_OPTION:
@@ -70,6 +70,7 @@ public class Main {
 				dialog.setContentPane(PanelFactory.newJarImportPanel(dialog, model));
 				dialog.setModal(true);
 				dialog.setSize(300, 200);
+				dialog.setLocationRelativeTo(f);
 				dialog.setVisible(true);
 			}
 		});
