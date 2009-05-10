@@ -193,7 +193,6 @@ public class PanelFactory {
 		JPanel p = new JPanel(new BorderLayout());
 		p.add(valid,BorderLayout.EAST);
 		mainPanel.add(p,BorderLayout.SOUTH);
-		
 		valid.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -244,6 +243,7 @@ public class PanelFactory {
 	}
 	public static JPanel newJarImportPanel(final Window window, final DiceModel model) {
 		final JPanel newJarPanel = new JPanel();
+		
 		newJarPanel.setLayout(new BorderLayout());
 		ListModel listModel = new DiceListModel(model);
 		final JList diceList = new JList(listModel);
@@ -304,7 +304,10 @@ public class PanelFactory {
 			@Override
 			public Integer stringToValue(String text) throws ParseException {
 				try{
-					return new Integer(text);
+					Integer i =  new Integer(text);
+					if(i>0)
+						return i;
+					throw new ParseException("Bad number",0);
 				}catch(NumberFormatException e){
 					throw new ParseException("Bad number",0);
 				}
@@ -351,7 +354,6 @@ public class PanelFactory {
 							throw new ParseException("Parse error",0);
 						}
 					}
-					System.out.println(set);
 					return set;
 				}catch (Exception e) {
 					throw new ParseException("Parse error",0);
@@ -387,7 +389,6 @@ public class PanelFactory {
 					sb.append(i+1);
 					last = i;
 				}
-				System.out.println(sb);
 				return sb.toString();
 			}
 		};
