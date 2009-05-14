@@ -1,4 +1,4 @@
-package fr.umlv.ig.misc;
+package fr.umlv.ig.cheatir;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -53,14 +53,19 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import fr.umlv.ig.cheatIr.model.DiceSelectorModel;
-import fr.umlv.ig.cheatIr.model.DiceThrower;
-import fr.umlv.ig.cheatIr.model.PrintListModel;
-import fr.umlv.ig.cheatIr.model.StatDiceModel;
-import fr.umlv.ig.cheatIr.model.TotalThrowModel;
+import fr.umlv.ig.cheatIr.model.config.DiceListModel;
+import fr.umlv.ig.cheatIr.model.config.DiceListener;
+import fr.umlv.ig.cheatIr.model.config.DiceModel;
+import fr.umlv.ig.cheatIr.model.config.DiceSpinnerNumberModel;
+import fr.umlv.ig.cheatIr.model.graph.DiceSelectorModel;
+import fr.umlv.ig.cheatIr.model.graph.PrintListModel;
+import fr.umlv.ig.cheatIr.model.graph.StatDiceModel;
+import fr.umlv.ig.cheatIr.model.graph.TotalThrowModel;
 import fr.umlv.ig.graph.JGraph;
-import fr.umlv.ig.graph.JScrollablePanel;
 import fr.umlv.ig.graph.JGraph.GraphType;
+import fr.umlv.ig.misc.Dice;
+import fr.umlv.ig.misc.DiceDescription;
+import fr.umlv.ig.misc.FairDice;
 
 public class PanelFactory {
 	public static JPanel newWorkspacePanel(final JFrame parent ,final DiceModel model) {
@@ -423,19 +428,19 @@ public class PanelFactory {
 		final JButton createView = new JButton("Create View");
 		createView.setEnabled(false);
 		graphManager.add(createView,leftgbc);
-		final JPanel resultPanel = new JPanel(new BorderLayout());
-		resultPanel.setBorder(BorderFactory.createTitledBorder("Results"));
+		
+		
 		final PrintListModel printModel = new PrintListModel(total);
 		final JList listResult = new JList(printModel);
-		//listResult.setVisibleRowCount(0);
 		JScrollPane resultJsp = new JScrollPane(listResult);
-		//resultPanel.setVisible(false);
-		resultPanel.add(resultJsp);
 		JCheckBox sortButton = new JCheckBox("Shuffle result");
+		final JPanel resultPanel = new JPanel(new BorderLayout());
+		resultPanel.add(resultJsp,BorderLayout.CENTER);
 		resultPanel.add(sortButton,BorderLayout.SOUTH);
+		System.out.println("bla");
+		resultPanel.setBorder(BorderFactory.createTitledBorder("Results"));
 		leftPanel.add(rethrow,leftgbc);
 		leftPanel.add(graphManager,leftgbc);
-		leftPanel.add(sortButton,leftgbc);
 		leftgbc.weighty=1;
 		leftgbc.weightx=1;
 		leftgbc.fill = GridBagConstraints.BOTH;

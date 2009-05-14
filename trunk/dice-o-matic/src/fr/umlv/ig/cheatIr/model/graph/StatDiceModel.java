@@ -1,16 +1,18 @@
-package fr.umlv.ig.cheatIr.model;
+package fr.umlv.ig.cheatIr.model.graph;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 @SuppressWarnings("serial")
 public class StatDiceModel extends AbstractTableModel{
-	private TableModel model;
-	private int sampling;
+	private final TableModel model;
+	private final int sampling;
 	private int row;
 	private int data[][];
 	public StatDiceModel(DiceSelectorModel model,int sampling) {
@@ -24,6 +26,17 @@ public class StatDiceModel extends AbstractTableModel{
 		for(int i = 0;i<row;i++){
 			Arrays.fill(data[i], -1);
 		}
+		model.addTableModelListener(new TableModelListener(){
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				row = (int)Math.ceil(((double)StatDiceModel.this.model.getRowCount()*StatDiceModel.this.model.getColumnCount())/StatDiceModel.this.sampling);
+				data = new int[row][StatDiceModel.this.getColumnCount()];
+				for(int i = 0;i<row;i++){
+					Arrays.fill(data[i], -1);
+				}
+				fireTableChanged(new TableModelEvent(StatDiceModel.this));
+			}
+		});
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package fr.umlv.ig.misc;
+package fr.umlv.ig.cheatIr.model.config;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +11,11 @@ import java.util.LinkedList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import fr.umlv.ig.cheatir.loader.DiceClassLoader;
+import fr.umlv.ig.misc.Dice;
+import fr.umlv.ig.misc.FairDice;
+import fr.umlv.ig.misc.FakeDice;
+
 public class DiceModel {
 	private final LinkedHashMap<Class<? extends Dice>, Integer> diceMap = new LinkedHashMap<Class<? extends Dice>, Integer>();
 	private final LinkedList<DiceListener> jarListenerList= new LinkedList<DiceListener>();
@@ -21,14 +26,6 @@ public class DiceModel {
 	public DiceModel() {
 		this.diceMap.put(FairDice.class, 0);
 		this.diceMap.put(FakeDice.class, 0);
-	}
-	
-	public void reset() {
-		Iterator<Class<? extends Dice>> it = this.getIterator();
-		while(it.hasNext()) {
-			Class<? extends Dice> clazz = it.next();
-			this.diceMap.put(clazz, 0);
-		}
 	}
 
 	public int getSize() {

@@ -1,4 +1,4 @@
-package fr.umlv.ig.misc;
+package fr.umlv.ig.cheatIr.model.config;
 
 public interface DiceListener {
 	

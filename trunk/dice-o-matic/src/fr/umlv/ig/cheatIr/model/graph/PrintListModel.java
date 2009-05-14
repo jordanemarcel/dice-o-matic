@@ -1,6 +1,7 @@
-package fr.umlv.ig.cheatIr.model;
+package fr.umlv.ig.cheatIr.model.graph;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -13,12 +14,12 @@ public class PrintListModel extends AbstractListModel{
 	private final TotalThrowModel model;
 	private boolean shuffle;
 	private LinkedList<Integer> randColList;
-	private LinkedList<Integer> randRowList;
+	private HashMap<Integer,Integer> randRowMap;
 	public PrintListModel(TotalThrowModel model) {
 		this.model = model;
 		shuffle = false;
 		randColList = new LinkedList<Integer>();
-		randRowList = new LinkedList<Integer>();
+		randRowMap = new HashMap<Integer,Integer>();
 		updateRandomList();
 		model.addTableModelListener(new TableModelListener(){
 			@Override
@@ -30,15 +31,19 @@ public class PrintListModel extends AbstractListModel{
 	}
 	private void updateRandomList(){
 		randColList.clear();
-		randRowList.clear();
+		randRowMap.clear();
 		for(int i=0;i<PrintListModel.this.model.getColumnCount();i++){
 			randColList.add(i);
 		}
+		LinkedList<Integer> randRowList = new LinkedList<Integer>();
 		for(int i=0;i<PrintListModel.this.model.getRowCount();i++){
 			randRowList.add(i);
 		}
 		Collections.shuffle(randColList);
 		Collections.shuffle(randRowList);
+		for(int i=0;i<PrintListModel.this.model.getRowCount();i++){
+			randRowMap.put(i, randRowList.removeFirst());
+		}
 	}
 	public boolean isShuffle() {
 		return shuffle;
@@ -53,7 +58,7 @@ public class PrintListModel extends AbstractListModel{
 		if(shuffle){
 			Iterator<Integer> it = randColList.iterator();
 			while(it.hasNext()){
-				sb.append(model.getValueAt(index,it.next()));
+				sb.append(model.getValueAt(randRowMap.get(index),it.next()));
 				sb.append(",");
 			}
 		}else{

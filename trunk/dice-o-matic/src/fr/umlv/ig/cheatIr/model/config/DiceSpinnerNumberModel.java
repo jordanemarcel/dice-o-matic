@@ -1,8 +1,10 @@
-package fr.umlv.ig.misc;
+package fr.umlv.ig.cheatIr.model.config;
 
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import fr.umlv.ig.misc.Dice;
 
 public class DiceSpinnerNumberModel extends SpinnerNumberModel {
 	private static final long serialVersionUID = 1L;

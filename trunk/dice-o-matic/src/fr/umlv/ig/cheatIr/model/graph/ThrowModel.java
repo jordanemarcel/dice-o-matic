@@ -1,4 +1,4 @@
-package fr.umlv.ig.cheatIr.model;
+package fr.umlv.ig.cheatIr.model.graph;
 
 import java.util.Arrays;
 import java.util.List;

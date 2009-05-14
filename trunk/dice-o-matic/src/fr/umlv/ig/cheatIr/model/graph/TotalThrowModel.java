@@ -1,10 +1,8 @@
-package fr.umlv.ig.cheatIr.model;
+package fr.umlv.ig.cheatIr.model.graph;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 @SuppressWarnings("serial")
@@ -48,11 +46,5 @@ public class TotalThrowModel extends AbstractTableModel{
 	public Object getValueAt(int throwIndex, int diceIndex) {
 		return diceResults.get(throwIndex).getElementAt(diceIndex);
 	}
-	@Override
-	public void fireTableRowsInserted(int firstRow, int lastRow) {
-		TableModelListener[] tab = listenerList.getListeners(TableModelListener.class);
-		for(TableModelListener tmp : tab){
-			tmp.tableChanged(new TableModelEvent(this,firstRow,lastRow));
-		}
-	}
+
 }

@@ -1,8 +1,11 @@
-package fr.umlv.ig.misc;
+package fr.umlv.ig.cheatir.loader;
 
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
+
+import fr.umlv.ig.misc.Dice;
+import fr.umlv.ig.misc.DiceDescription;
 
 public class DiceClassLoader extends URLClassLoader{
 	public DiceClassLoader(URL[] urls) {

@@ -11,6 +11,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -39,6 +41,22 @@ public class PieGraphUI extends GraphUI{
 		circleMap = new HashMap<Ellipse2D, String[]>();
 		legend = null;
 		legendShape = null;
+		
+		graph.addPropertyChangeListener("rethrow",new PropertyChangeListener(){
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				circleList.clear();
+				circleMap.clear();
+				legendShape=null;
+				legend=null;
+				TableModel model = graph.getModel();
+				int row = model.getRowCount();
+				Insets insets = graph.getInsets();
+				int h = 200-insets.top-insets.bottom;
+				int separator = h/10;
+				preferedSize = new Dimension(row*3*h/4+(row+2)*separator,200);
+			}
+		});
 	}
 	/* (non-Javadoc)
 	 * @see javax.swing.plaf.ComponentUI#installUI(javax.swing.JComponent)
@@ -126,7 +144,6 @@ public class PieGraphUI extends GraphUI{
 		int xPos = separator;
 		int yPos = (h-graphRaduis)/2;
 		int sum = 0;
-		
 		g2.setColor(Color.WHITE);
 		g2.fillRect(0, 0, w, h);
 		for(int j = 0; j<row; j++){
@@ -165,6 +182,10 @@ public class PieGraphUI extends GraphUI{
 			g2.fillRect((int)cir.getX(), (int)cir.getY(), (int)cir.getWidth(), (int)cir.getHeight());
 			g2.setColor(Color.BLACK);
 			g2.drawRect((int)cir.getX(), (int)cir.getY(), (int)cir.getWidth(), (int)cir.getHeight());
+			if((legendShape.y+legendShape.height)>c.getHeight())
+				legendShape.y = c.getHeight()-legendShape.height;
+			if((legendShape.x+legendShape.width)>c.getWidth())
+				legendShape.x = c.getWidth()-legendShape.width;
 			g2.drawImage(legend, legendShape.x, legendShape.y, null);
 			g2.drawRect(legendShape.x, legendShape.y, legendShape.width, legendShape.height);
 		}

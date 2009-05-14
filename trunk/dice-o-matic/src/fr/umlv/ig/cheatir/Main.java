@@ -1,4 +1,4 @@
-package fr.umlv.ig.misc;
+package fr.umlv.ig.cheatir;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -18,7 +18,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
-import fr.umlv.ig.graph.MyMetalLnF;
+import fr.umlv.ig.cheatIr.model.config.DiceModel;
 
 public class Main {
 	static boolean currentSession = false;
@@ -30,7 +30,6 @@ public class Main {
 		}
 		final DiceModel model = new DiceModel();
 		final JFrame f = new JFrame("Dice'o'matic");
-		
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		f.setSize(640, 480);
 		JPanel p = new JPanel(new BorderLayout());
@@ -49,7 +48,6 @@ public class Main {
 					int value = JOptionPane.showConfirmDialog(f,"Do you really want to start over again?","Question",JOptionPane.YES_NO_OPTION);
 					switch(value) {
 					case JOptionPane.YES_OPTION:
-						model.reset();
 						f.setContentPane(PanelFactory.newWorkspacePanel(f,model));
 						f.validate();
 						break;

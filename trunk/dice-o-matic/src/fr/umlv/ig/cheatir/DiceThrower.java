@@ -1,10 +1,11 @@
-package fr.umlv.ig.cheatIr.model;
+package fr.umlv.ig.cheatir;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import fr.umlv.ig.cheatIr.model.ThrowModel;
+import fr.umlv.ig.cheatIr.model.graph.ThrowModel;
+import fr.umlv.ig.cheatIr.model.graph.TotalThrowModel;
 import fr.umlv.ig.misc.Dice;
 
 public class DiceThrower {
