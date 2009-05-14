@@ -19,7 +19,12 @@ import java.util.LinkedList;
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.table.TableModel;
-
+/**
+ * This is a implementation of @link fr.umlv.ig.graph.GraphUI
+ * This implementation is a UI for @link fr.umlv.ig.graph.JGraph
+ * it display the JGraph as a pie chart
+ * @author Clement Lebreton & Jordane Marcel
+ */
 public class PieGraphUI extends GraphUI{
 	private final JGraph graph;
 	private Dimension preferedSize;
@@ -58,20 +63,28 @@ public class PieGraphUI extends GraphUI{
 			}
 		});
 	}
-	/* (non-Javadoc)
-	 * @see javax.swing.plaf.ComponentUI#installUI(javax.swing.JComponent)
+	/**
+	 * Configures the specified component appropriate for the look and feel.
+	 * This install a mouse listener which is responsible for paint legend on right click.
+	 * @param c the component where this UI delegate is being installed    
 	 */
 	@Override
 	public void installUI(JComponent c) {
 		graph.addMouseListener(mouseLegendAdapter);
 	}
-	/* (non-Javadoc)
-	 * @see javax.swing.plaf.ComponentUI#uninstallUI(javax.swing.JComponent)
+	/**
+	 * Reverses configuration which was done on the specified component during installUI.
+	 * @param c the component from which this UI delegate is being removed.
 	 */
 	@Override
 	public void uninstallUI(JComponent c) {
 		graph.removeMouseListener(mouseLegendAdapter);
 	}
+	/**
+	 * This method is called for create the UI of a component
+	 * @param component Create an UI for the given component
+	 * @return the created UI
+	 */
 	public static ComponentUI createUI(JComponent c){
 		return new PieGraphUI(c);
 	}
@@ -117,15 +130,20 @@ public class PieGraphUI extends GraphUI{
 			}
 		}
 	};
-	/* (non-Javadoc)
-	 * @see javax.swing.plaf.ComponentUI#getPreferredSize(javax.swing.JComponent)
+	/**
+	 * Returns the specified component's preferred size appropriate for the look and feel
+	 * @param c the component whose preferred size is being queried; this argument is often
+	 * @return a Dimension object with the preferred size
 	 */
 	@Override
 	public Dimension getPreferredSize(JComponent c) {
 		return preferedSize;
 	}
-	/* (non-Javadoc)
-	 * @see javax.swing.plaf.ComponentUI#paint(java.awt.Graphics, javax.swing.JComponent)
+
+	/**
+	 * Paints the component UI. This UI is a JGraph paint as a pie chart 
+	 * @param g paints the component of this graphics
+	 * @param c paints this component on the graphics g
 	 */
 	@Override
 	public void paint(Graphics g, JComponent c) {

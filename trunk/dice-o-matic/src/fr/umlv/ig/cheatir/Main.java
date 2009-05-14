@@ -18,7 +18,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
-import fr.umlv.ig.cheatIr.model.config.DiceModel;
+import fr.umlv.ig.cheatir.model.config.DiceModel;
 
 public class Main {
 	static boolean currentSession = false;
@@ -49,14 +49,14 @@ public class Main {
 					switch(value) {
 					case JOptionPane.YES_OPTION:
 						model.reset();
-						f.setContentPane(PanelFactory.newWorkspacePanel(f,model));
+						f.setContentPane(PanelFactory.createWorkspacePanel(f,model));
 						f.validate();
 						break;
 					case JOptionPane.NO_OPTION:
 						break;
 					}
 				} else {
-					f.setContentPane(PanelFactory.newWorkspacePanel(f,model));
+					f.setContentPane(PanelFactory.createWorkspacePanel(f,model));
 					Main.currentSession = true;
 					f.validate();
 				}
@@ -67,7 +67,7 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JDialog dialog = new JDialog();
-				dialog.setContentPane(PanelFactory.newJarImportPanel(dialog, model));
+				dialog.setContentPane(PanelFactory.createJarImportPanel(dialog, model));
 				dialog.setModal(true);
 				dialog.setSize(300, 200);
 				dialog.setLocationRelativeTo(f);
