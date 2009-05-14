@@ -75,7 +75,12 @@ public class DiceModel {
 			firing = false;
 		}
 	}
-	
+	public void reset(){
+		Iterator<Class<? extends Dice>> it = diceMap.keySet().iterator();
+		while(it.hasNext()){
+			changeElement(it.next(), 0);
+		}
+	}
 	public Object getElementAt(int index) {
 		if(index>=this.getSize())
 			throw new ArrayIndexOutOfBoundsException("Trying to access an object out of bounds!");

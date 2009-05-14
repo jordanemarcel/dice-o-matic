@@ -437,7 +437,6 @@ public class PanelFactory {
 		final JPanel resultPanel = new JPanel(new BorderLayout());
 		resultPanel.add(resultJsp,BorderLayout.CENTER);
 		resultPanel.add(sortButton,BorderLayout.SOUTH);
-		System.out.println("bla");
 		resultPanel.setBorder(BorderFactory.createTitledBorder("Results"));
 		leftPanel.add(rethrow,leftgbc);
 		leftPanel.add(graphManager,leftgbc);
