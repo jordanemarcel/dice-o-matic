@@ -1,4 +1,4 @@
-package fr.umlv.ig.graph;
+package fr.umlv.ig.cheatir;
 
 import javax.swing.UIDefaults;
 import javax.swing.plaf.metal.MetalLookAndFeel;

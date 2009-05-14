@@ -1,4 +1,4 @@
-package fr.umlv.ig.cheatIr.model;
+package fr.umlv.ig.cheatIr.model.graph;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,14 +17,12 @@ public class DiceSelectorModel extends AbstractTableModel{
 		isCorrespondingInit = false;
 		if(model==null)
 			throw new IllegalArgumentException("The model should not be null!");
-		
 		this.model = model;
 		corresponding = new HashMap<Integer, Integer>();
 		for(int i=0 ;i<model.getColumnCount(); i++){
 			corresponding.put(i,i);
 			isCorrespondingInit = true;
 		}
-
 		model.addTableModelListener(new TableModelListener(){
 			@Override
 			public void tableChanged(TableModelEvent e) {
@@ -41,7 +39,6 @@ public class DiceSelectorModel extends AbstractTableModel{
 		});
 
 	}
-
 	public void setSelectedDices(Set<Integer> selection){
 		corresponding.clear();
 		Iterator<Integer> it = selection.iterator();

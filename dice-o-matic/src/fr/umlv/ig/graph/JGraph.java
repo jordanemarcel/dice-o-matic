@@ -7,6 +7,8 @@ import java.awt.Rectangle;
 import javax.swing.JComponent;
 import javax.swing.Scrollable;
 import javax.swing.UIManager;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 @SuppressWarnings("serial")
@@ -52,6 +54,8 @@ public class JGraph extends JComponent implements Scrollable{
 	 * for a best style the number of {@see Color} should be same as column number
 	 */
 	public JGraph(TableModel model, Color...colors) {
+		if(model==null)
+			throw new IllegalArgumentException("The model should not null!");
 		this.model = model;
 		if(colors!=null && colors.length>0){
 			this.colors = colors;
@@ -61,6 +65,14 @@ public class JGraph extends JComponent implements Scrollable{
 		this.colorIndex = 0;
 		this.currentType = GraphType.PIE;
 		this.updateUI();
+		model.addTableModelListener(new TableModelListener(){
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				JGraph.this.revalidate();
+				JGraph.this.repaint();
+				JGraph.this.firePropertyChange("rethrow", 0, 1);
+			}
+		});
 	}
 	public GraphType getGraphType(){
 		return currentType;

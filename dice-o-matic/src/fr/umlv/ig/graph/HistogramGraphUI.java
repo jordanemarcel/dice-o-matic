@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -21,7 +23,7 @@ import javax.swing.table.TableModel;
  */
 public class HistogramGraphUI extends GraphUI{
 	private final JGraph graph ;
-	private final Dimension preferedSize;
+	private Dimension preferedSize;
 	private final LinkedList<Rectangle> recList;
 	private final HashMap<Rectangle, String[]> recMap;
 	private BufferedImage legend;
@@ -37,6 +39,19 @@ public class HistogramGraphUI extends GraphUI{
 		recMap = new HashMap<Rectangle, String[]>();
 		legend = null;
 		legendShape = null;
+		graph.addPropertyChangeListener("rethrow",new PropertyChangeListener(){
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				recList.clear();
+				recMap.clear();
+				legendShape=null;
+				legend=null;
+				TableModel model = graph.getModel();
+				int row = model.getRowCount();
+				int col = model.getColumnCount();
+				preferedSize = new Dimension(row*col*15+(row*(col+2))*2+row*4+3*xInset,200);
+			}
+		});
 		preferedSize = new Dimension(row*col*15+(row*(col+2))*2+row*4+3*xInset,200);
 	}
 	/**

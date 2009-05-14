@@ -1,4 +1,4 @@
-package fr.umlv.ig.graph;
+package fr.umlv.ig.cheatir;
 
 import java.awt.Dimension;
 import java.awt.LayoutManager;
