@@ -6,8 +6,21 @@ import java.net.URLClassLoader;
 
 import fr.umlv.ig.misc.Dice;
 import fr.umlv.ig.misc.DiceDescription;
-
+/**
+ * This is a special implementation of URLClassLoader, in fact this class loader
+ * can load only class with some specification. 
+ * This class should :
+ * <li>-implements {@link fr.umlv.ig.misc.Dice} interface</li>
+ * <li>-have only ONE constructor</li>
+ * <li>-constructor parameter should be int, float or String and nothing else</li>
+ * <li>-the constructor should be annotate with {@link fr.umlv.ig.misc.DiceDescription} annotation</li>
+ * @author Clement Lebreton & Jordane Marcel
+ */
 public class DiceClassLoader extends URLClassLoader{
+	/**
+	 * This constructor is same as URLClassLoader(URL[] urls)
+	 * @param urls urls in which this loader try to find requested class
+	 */
 	public DiceClassLoader(URL[] urls) {
 		super(urls);
 	}
@@ -61,6 +74,17 @@ public class DiceClassLoader extends URLClassLoader{
 		}
 		return true;
 	}
+	/**
+	 * Returns if the given class is available for be load by this classLoader
+	 * @param diceClass the checked class
+	 * @return true if this class if available, false otherwise. More formally, to be available 
+	 * this class should : 
+	 * <li>-implements fr.umlv.misc.Dice interface</li>
+	 * <li>-have only ONE constructor</li>
+	 * <li>-constructor parameter should be int, float or String and nothing else</li>
+	 * <li>-the constructor should be annotate with fr.umlv.misc.DiceDescription annotation</li>
+	 *  
+	 */
 	public static boolean isDiceClass(Class<?> diceClass) {
 		return isDiceClass(diceClass, true);
 	}

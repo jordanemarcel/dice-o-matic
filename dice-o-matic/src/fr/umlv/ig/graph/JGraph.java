@@ -11,6 +11,13 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+/**
+ * This JComponent is a graphic representation of a TableModel.
+ * Each row of the TableModel is a minimum graph on the main graph.
+ * Each column of the TableModel is a indicator of what is represent.
+ * Each value of the model should be a Integer.
+ * @author Clement Lebreton & Jordane Marcel
+ */
 @SuppressWarnings("serial")
 public class JGraph extends JComponent implements Scrollable{
 	public enum GraphType{
@@ -47,11 +54,11 @@ public class JGraph extends JComponent implements Scrollable{
 	}
 	/**
 	 * Instantiate a new JGraph
-	 * @param model : The graph will be based on the {@see TableModel}, 
+	 * @param model : The graph will be based on the {@link javax.swing.table.TableModel}, 
 	 * each row is a separated sampling and each column is a different value on
 	 * the graph
-	 * @param colors : A table of {@see Color} witch will be use to draw Graph,
-	 * for a best style the number of {@see Color} should be same as column number
+	 * @param colors : A table of {@link java.awt.Color} witch will be use to draw Graph,
+	 * for a best style the number of {@link java.awt.Color} should be same as column number
 	 */
 	public JGraph(TableModel model, Color...colors) {
 		if(model==null)
@@ -74,22 +81,47 @@ public class JGraph extends JComponent implements Scrollable{
 			}
 		});
 	}
+	/**
+	 * Returns the current graphic UI type
+	 * @return the current graphic UI type
+	 */
 	public GraphType getGraphType(){
 		return currentType;
 	}
+	/**
+	 * Sets the graphic UI type
+	 * @param type the graphic UI type to set
+	 */
 	public void setGraphType(GraphType type){
 		currentType = type;
 		updateUI();
 	}
+	/**
+	 * Returns the data model
+	 * @return the data model
+	 */
 	public TableModel getModel() {
 		return model;
 	}
+	/**
+	 * Change the color use to print the graph. For a better style the number of color
+	 * should be the same as the column number.
+	 * @param colors array of colors.
+	 */
 	public void setColors(Color...colors){
 		this.colors = colors;
 	}
+	/**
+	 * Returns the array of color in use.
+	 * @return the array of color
+	 */
 	public Color[] getColors() {
 		return colors;
 	}
+	/**
+	 * Returns the next color to use and prepare the next value.
+	 * @return Returns the next color to use. 
+	 */
 	protected Color getColor(){
 		if(colors==null){
 			return Color.BLACK;

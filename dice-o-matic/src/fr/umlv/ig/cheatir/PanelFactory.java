@@ -53,25 +53,35 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import fr.umlv.ig.cheatIr.model.config.DiceListModel;
-import fr.umlv.ig.cheatIr.model.config.DiceListener;
-import fr.umlv.ig.cheatIr.model.config.DiceModel;
-import fr.umlv.ig.cheatIr.model.config.DiceSpinnerNumberModel;
-import fr.umlv.ig.cheatIr.model.graph.DiceSelectorModel;
-import fr.umlv.ig.cheatIr.model.graph.PrintListModel;
-import fr.umlv.ig.cheatIr.model.graph.StatDiceModel;
-import fr.umlv.ig.cheatIr.model.graph.TotalThrowModel;
+import fr.umlv.ig.cheatir.model.config.DiceListModel;
+import fr.umlv.ig.cheatir.model.config.DiceListener;
+import fr.umlv.ig.cheatir.model.config.DiceModel;
+import fr.umlv.ig.cheatir.model.config.DiceSpinnerNumberModel;
+import fr.umlv.ig.cheatir.model.graph.DiceSelectorModel;
+import fr.umlv.ig.cheatir.model.graph.PrintListModel;
+import fr.umlv.ig.cheatir.model.graph.StatDiceModel;
+import fr.umlv.ig.cheatir.model.graph.TotalThrowModel;
 import fr.umlv.ig.graph.JGraph;
 import fr.umlv.ig.graph.JGraph.GraphType;
 import fr.umlv.ig.misc.Dice;
 import fr.umlv.ig.misc.DiceDescription;
 import fr.umlv.ig.misc.FairDice;
-
-public class PanelFactory {
-	public static JPanel newWorkspacePanel(final JFrame parent ,final DiceModel model) {
+/**
+ * The CheatIr panel factory. This factory enable to create all panel
+ * of this application.
+ * @author Clement Lebreton & Jordane Marcel
+ */
+public abstract class PanelFactory {
+	/**
+	 * 
+	 * @param parent
+	 * @param model
+	 * @return the configured panel
+	 */
+	public static JPanel createWorkspacePanel(final JFrame parent ,final DiceModel model) {
 		JPanel newWorkspace = new JPanel();
-        newWorkspace.setLayout(new BorderLayout());
-        JButton validate = new JButton("Validate");
+		newWorkspace.setLayout(new BorderLayout());
+		JButton validate = new JButton("Validate");
 		validate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -80,7 +90,7 @@ public class PanelFactory {
 				LinkedList<Dice> ll = launchDiceConfiguration(parent,model);
 				if(ll == null)
 					return;
-				
+
 				DiceThrower dt = new DiceThrower(ll);
 				parent.setContentPane(createSessionPanel(dt));
 				parent.validate();
@@ -88,61 +98,59 @@ public class PanelFactory {
 			}
 		});
 		JPanel southPanel = new JPanel();
-        southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
-        southPanel.add(validate);
-        validate.setAlignmentX(1);
-        newWorkspace.add(southPanel, BorderLayout.SOUTH);
+		southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
+		southPanel.add(validate);
+		validate.setAlignmentX(1);
+		newWorkspace.add(southPanel, BorderLayout.SOUTH);
 
-        JPanel dicePanel = PanelFactory.getDiceSelectorPanel(model);
-        final JScrollPane scrollPane = new JScrollPane(dicePanel);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Select your dices"));
-        newWorkspace.add(scrollPane, BorderLayout.CENTER);
-        model.addJarDiceListener(new DiceListener() {
-                @Override
-                public void diceAdded() {
-                        scrollPane.setViewportView(PanelFactory.getDiceSelectorPanel(model));
-                }
-                @Override
-                public void diceValueChanged() {
-                        /* */
-                }
-        });
-        return newWorkspace;
+		JPanel dicePanel = PanelFactory.getDiceSelectorPanel(model);
+		final JScrollPane scrollPane = new JScrollPane(dicePanel);
+		scrollPane.setBorder(BorderFactory.createTitledBorder("Select your dices"));
+		newWorkspace.add(scrollPane, BorderLayout.CENTER);
+		model.addJarDiceListener(new DiceListener() {
+			@Override
+			public void diceAdded() {
+				scrollPane.setViewportView(PanelFactory.getDiceSelectorPanel(model));
+			}
+			@Override
+			public void diceValueChanged() {
+				/* */
+			}
+		});
+		return newWorkspace;
+	}
+	private static JPanel getDiceSelectorPanel(final DiceModel model) {
+		JPanel dicePanel = new JPanel();
+		dicePanel.setLayout(new GridBagLayout());
+		GridBagConstraints constraints = new GridBagConstraints();
+		Insets bottomSpace = new Insets(0,10,10,0);
+		Insets noSpace = new Insets(10,10,0,0);
+		Insets rightSpace = new Insets(10,10,0,10);
+		Iterator<Class <? extends Dice>> it = model.getIterator();
+		while(it.hasNext()) {
+			final Class<? extends Dice> clazz = it.next();
+			constraints.gridwidth = 1;
+			constraints.anchor = GridBagConstraints.BASELINE_LEADING;
+			constraints.insets = rightSpace;
+			DiceDescription description = clazz.getConstructors()[0].getAnnotation(DiceDescription.class);
+			dicePanel.add(new JLabel(clazz.getSimpleName()), constraints);
+			SpinnerNumberModel snm = new DiceSpinnerNumberModel(0, Integer.MAX_VALUE, 1, clazz, model);
+			JSpinner spin = new JSpinner(snm);
+			constraints.gridwidth = GridBagConstraints.REMAINDER;
+			dicePanel.add(spin, constraints);
+			constraints.insets = bottomSpace;
+			constraints.gridwidth = GridBagConstraints.REMAINDER;
+			JLabel descriptionLabel = new JLabel(description.value()[0]);
+			descriptionLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+			dicePanel.add(descriptionLabel, constraints);
+			constraints.insets = noSpace;
+		}
+		constraints.weighty = 1;
+		constraints.weightx = 1;
+		dicePanel.add(new JPanel(), constraints);
+		return dicePanel;
 	}
 
-	 private static JPanel getDiceSelectorPanel(final DiceModel model) {
-         JPanel dicePanel = new JPanel();
-         dicePanel.setLayout(new GridBagLayout());
-         GridBagConstraints constraints = new GridBagConstraints();
-         Insets bottomSpace = new Insets(0,10,10,0);
-         Insets noSpace = new Insets(10,10,0,0);
-         Insets rightSpace = new Insets(10,10,0,10);
-
-         Iterator<Class <? extends Dice>> it = model.getIterator();
-         while(it.hasNext()) {
-                 final Class<? extends Dice> clazz = it.next();
-                 constraints.gridwidth = 1;
-                 constraints.anchor = GridBagConstraints.BASELINE_LEADING;
-                 constraints.insets = rightSpace;
-                 DiceDescription description = clazz.getConstructors()[0].getAnnotation(DiceDescription.class);
-                 dicePanel.add(new JLabel(clazz.getSimpleName()), constraints);
-                 SpinnerNumberModel snm = new DiceSpinnerNumberModel(0, Integer.MAX_VALUE, 1, clazz, model);
-                 JSpinner spin = new JSpinner(snm);
-                 constraints.gridwidth = GridBagConstraints.REMAINDER;
-                 dicePanel.add(spin, constraints);
-                 constraints.insets = bottomSpace;
-                 constraints.gridwidth = GridBagConstraints.REMAINDER;
-                 JLabel descriptionLabel = new JLabel(description.value()[0]);
-                 descriptionLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-                 dicePanel.add(descriptionLabel, constraints);
-                 constraints.insets = noSpace;
-         }
-         constraints.weighty = 1;
-         constraints.weightx = 1;
-         dicePanel.add(new JPanel(), constraints);
-         return dicePanel;
- }
-	
 	private static LinkedList<Dice> launchDiceConfiguration(Component parent, DiceModel model){
 		Iterator<Class<? extends Dice>> it =  model.getIterator();
 		final LinkedList<Dice> diceList = new LinkedList<Dice>();
@@ -176,7 +184,7 @@ public class PanelFactory {
 		return diceList;
 
 	}
-
+	
 	private static JPanel createConfigurationDicePanel(final JDialog window, Class<? extends Dice> diceClass,final LinkedList<Dice> diceList){
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		final Constructor<?> constructor = diceClass.getConstructors()[0];
@@ -247,9 +255,9 @@ public class PanelFactory {
 	private static void showFieldErrorDialog(Component parent){
 		JOptionPane.showMessageDialog(parent,"Incorrect field value! Please fill field with valid parameter.","Error",JOptionPane.ERROR_MESSAGE);	
 	}
-	public static JPanel newJarImportPanel(final Window window, final DiceModel model) {
+	public static JPanel createJarImportPanel(final Window window, final DiceModel model) {
 		final JPanel newJarPanel = new JPanel();
-		
+
 		newJarPanel.setLayout(new BorderLayout());
 		ListModel listModel = new DiceListModel(model);
 		final JList diceList = new JList(listModel);
@@ -428,8 +436,8 @@ public class PanelFactory {
 		final JButton createView = new JButton("Create View");
 		createView.setEnabled(false);
 		graphManager.add(createView,leftgbc);
-		
-		
+
+
 		final PrintListModel printModel = new PrintListModel(total);
 		final JList listResult = new JList(printModel);
 		JScrollPane resultJsp = new JScrollPane(listResult);
@@ -450,7 +458,7 @@ public class PanelFactory {
 
 		/* *********************************** */
 		//Right Panel Start
-		final JScrollablePanel rightPanel = new JScrollablePanel(new GridBagLayout());
+		final JVerticalScrollablePanel rightPanel = new JVerticalScrollablePanel(new GridBagLayout());
 		final GridBagConstraints rightgbc = new GridBagConstraints();
 		rightgbc.fill = GridBagConstraints.HORIZONTAL;
 		rightgbc.gridwidth = GridBagConstraints.REMAINDER;
