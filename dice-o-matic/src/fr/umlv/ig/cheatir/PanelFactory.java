@@ -439,7 +439,6 @@ public abstract class PanelFactory {
 		createView.setEnabled(false);
 		graphManager.add(createView,leftgbc);
 
-
 		final PrintListModel printModel = new PrintListModel(total);
 		final JList listResult = new JList(printModel);
 		//create a good prototype cell
@@ -447,7 +446,6 @@ public abstract class PanelFactory {
 		int tmp = 2*thrower.getDices().size();
 		for(int i=0;i<tmp;i++)
 			protoCell.append("1");
-		System.out.println(protoCell.toString());
 		listResult.setPrototypeCellValue(protoCell.toString());
 		JScrollPane resultJsp = new JScrollPane(listResult);
 		final JCheckBox sortButton = new JCheckBox("Shuffle result");
