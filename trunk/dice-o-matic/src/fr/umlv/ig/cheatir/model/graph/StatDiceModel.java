@@ -83,6 +83,7 @@ public class StatDiceModel extends AbstractTableModel{
 		}
 		try{
 			for(int i = start; i< start+sampling; i++){
+				System.out.println(start+" "+sampling+" "+i);
 				for(int j=0;j<col;j++){
 					Integer val = (Integer)model.getValueAt(i, j);
 					if(val==null)

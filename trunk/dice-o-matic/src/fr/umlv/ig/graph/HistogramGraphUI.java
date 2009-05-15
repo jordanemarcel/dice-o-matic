@@ -77,13 +77,13 @@ public class HistogramGraphUI extends GraphUI{
 						return;
 					}
 					if(rectangle.contains(e.getPoint())){
-						BufferedImage img = new BufferedImage(100,100,BufferedImage.TYPE_INT_ARGB);
+						BufferedImage img = new BufferedImage(120,100,BufferedImage.TYPE_INT_ARGB);
 						Graphics2D imgG = (Graphics2D) img.getGraphics();
 						Color c = new Color(200,250,0,200);
 						imgG.setColor(c);
-						imgG.fillRect(0, 0, 100, 100);
+						imgG.fillRect(0, 0, 120, 100);
 						imgG.setColor(Color.BLACK);
-						imgG.drawRect(0, 0, 99, 99);
+						imgG.drawRect(0, 0, 119, 99);
 						int col = graph.getModel().getColumnCount();
 						String text[] = recMap.get(rectangle);
 						for(int i=0;i<col;i++){
@@ -91,7 +91,7 @@ public class HistogramGraphUI extends GraphUI{
 						}
 						imgG.dispose();
 						legend=img;
-						legendShape = new Rectangle(100,100);
+						legendShape = new Rectangle(120,100);
 						legendShape.setLocation(e.getPoint());
 						rectangleIndex = recList.indexOf(rectangle);
 						e.getComponent().repaint();

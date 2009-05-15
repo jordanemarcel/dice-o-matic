@@ -3,6 +3,7 @@ package fr.umlv.ig.cheatir.model.graph;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.print.attribute.standard.Sides;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -70,10 +71,15 @@ public class TotalThrowModel extends AbstractTableModel{
 	}
 	/**
 	 * Returns the elements at the row throwIndex and column diceIndex
-	 * @return the value at the queried position, this is a Integer 
+	 * @return the value at the queried position, this is a Integer. Return null
+	 * if this element doesn't exist
 	 */
 	@Override
 	public Object getValueAt(int throwIndex, int diceIndex) {
+		if(throwIndex>=diceResults.size())
+			return null;
+		if(diceIndex>=nbDice)
+			return null;
 		return diceResults.get(throwIndex).getElementAt(diceIndex);
 	}
 
