@@ -442,9 +442,9 @@ public abstract class PanelFactory {
 		final JList listResult = new JList(printModel);
 		//create a good prototype cell
 		StringBuilder protoCell = new StringBuilder();
-		for(int charCount = total.getColumnCount()*2;charCount<0;charCount--){
+		int tmp = 2*thrower.getDices().size();
+		for(int i=0;i<tmp;i++)
 			protoCell.append("1");
-		}
 		System.out.println(protoCell.toString());
 		listResult.setPrototypeCellValue(protoCell.toString());
 		JScrollPane resultJsp = new JScrollPane(listResult);
