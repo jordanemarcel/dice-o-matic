@@ -440,6 +440,13 @@ public abstract class PanelFactory {
 
 		final PrintListModel printModel = new PrintListModel(total);
 		final JList listResult = new JList(printModel);
+		//create a good prototype cell
+		StringBuilder protoCell = new StringBuilder();
+		for(int charCount = total.getColumnCount()*2;charCount<0;charCount--){
+			protoCell.append("1");
+		}
+		System.out.println(protoCell.toString());
+		listResult.setPrototypeCellValue(protoCell.toString());
 		JScrollPane resultJsp = new JScrollPane(listResult);
 		JCheckBox sortButton = new JCheckBox("Shuffle result");
 		final JPanel resultPanel = new JPanel(new BorderLayout());
@@ -561,8 +568,7 @@ public abstract class PanelFactory {
 						}
 					}
 				});
-				String title = selector.getRowCount()+" throws on "+selector.getColumnCount()+" dice"
-				+" sampled by "+sample;
+				String title = +selector.getColumnCount()+" dice"+" sampled by "+sample;
 				rightPanel.add(createGraphicPanel(g,title),rightgbc);
 				rightgbc.weighty=1;
 				rightPanel.add(filler,rightgbc);

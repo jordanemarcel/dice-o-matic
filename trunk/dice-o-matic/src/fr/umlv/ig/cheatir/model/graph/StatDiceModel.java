@@ -32,7 +32,7 @@ public class StatDiceModel extends AbstractTableModel{
 		}
 		this.model = model;
 		this.sampling = sampling;
-		this.row = (int)Math.ceil(((double)model.getRowCount()*model.getColumnCount())/sampling);
+		this.row = (int)Math.ceil(((double)model.getRowCount())/sampling);
 		data = new int[row][this.getColumnCount()];
 		for(int i = 0;i<row;i++){
 			Arrays.fill(data[i], -1);
@@ -40,7 +40,7 @@ public class StatDiceModel extends AbstractTableModel{
 		model.addTableModelListener(new TableModelListener(){
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				row = (int)Math.ceil(((double)StatDiceModel.this.model.getRowCount()*StatDiceModel.this.model.getColumnCount())/StatDiceModel.this.sampling);
+				row = (int)Math.ceil(((double)StatDiceModel.this.model.getRowCount())/StatDiceModel.this.sampling);
 				data = new int[row][StatDiceModel.this.getColumnCount()];
 				for(int i = 0;i<row;i++){
 					Arrays.fill(data[i], -1);
@@ -76,16 +76,19 @@ public class StatDiceModel extends AbstractTableModel{
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		LinkedList<Integer> ll = new LinkedList<Integer>();
 		int start = sampling*rowIndex;
-		int row = model.getRowCount();
+		//int row = model.getRowCount();
+		int col = model.getColumnCount();
 		if(data[rowIndex][columnIndex]!=-1){
 			return data[rowIndex][columnIndex];
 		}
 		try{
 			for(int i = start; i< start+sampling; i++){
-				Integer val = (Integer)model.getValueAt(i%row, i/row);
-				if(val==null)
-					continue;
-				ll.add(val);
+				for(int j=0;j<col;j++){
+					Integer val = (Integer)model.getValueAt(i, j);
+					if(val==null)
+						continue;
+					ll.add(val);
+				}
 			}
 		}catch (ArrayIndexOutOfBoundsException e) {
 			if(ll.size()==0)
