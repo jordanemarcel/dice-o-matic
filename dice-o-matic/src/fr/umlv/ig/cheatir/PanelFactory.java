@@ -13,6 +13,8 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -184,7 +186,7 @@ public abstract class PanelFactory {
 		return diceList;
 
 	}
-	
+
 	private static JPanel createConfigurationDicePanel(final JDialog window, Class<? extends Dice> diceClass,final LinkedList<Dice> diceList){
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		final Constructor<?> constructor = diceClass.getConstructors()[0];
@@ -448,7 +450,8 @@ public abstract class PanelFactory {
 		System.out.println(protoCell.toString());
 		listResult.setPrototypeCellValue(protoCell.toString());
 		JScrollPane resultJsp = new JScrollPane(listResult);
-		JCheckBox sortButton = new JCheckBox("Shuffle result");
+		final JCheckBox sortButton = new JCheckBox("Shuffle result");
+
 		final JPanel resultPanel = new JPanel(new BorderLayout());
 		resultPanel.add(resultJsp,BorderLayout.CENTER);
 		resultPanel.add(sortButton,BorderLayout.SOUTH);
@@ -489,13 +492,20 @@ public abstract class PanelFactory {
 
 		/* *********************************** */
 		//Action  Start
-		sortButton.addActionListener(new ActionListener(){
+
+		sortButton.addItemListener(new ItemListener(){
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void itemStateChanged(ItemEvent e) {
 				if(printModel.isShuffle())
 					printModel.setShuffle(false);
 				else
 					printModel.setShuffle(true);
+			}
+		});
+		sortButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
 
@@ -584,7 +594,7 @@ public abstract class PanelFactory {
 					return;
 				createView.setEnabled(true);
 				throwButton.setText("Throw again");
-				//resultPanel.setVisible(true);
+				sortButton.setSelected(false);
 				thrower.throwDices(Integer.parseInt(s), total);
 			}
 		});
