@@ -48,7 +48,7 @@ public class Main {
 					int value = JOptionPane.showConfirmDialog(f,"Do you really want to start over again?","Question",JOptionPane.YES_NO_OPTION);
 					switch(value) {
 					case JOptionPane.YES_OPTION:
-						model.reset();
+						model.newSession();
 						f.setContentPane(PanelFactory.createWorkspacePanel(f,model));
 						f.validate();
 						break;

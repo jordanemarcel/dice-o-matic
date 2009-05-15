@@ -37,11 +37,19 @@ public class DiceModel {
 		this.diceMap.put(FairDice.class, 0);
 		this.diceMap.put(FakeDice.class, 0);
 	}
-
+	/**
+	 * Returns the size of the element. More formally ,this is the number of
+	 * different dice in the model, even if they have 0 in count.
+	 * @return
+	 */
 	public int getSize() {
 		return diceMap.size();
 	}
 	
+	/**
+	 * 
+	 * @param diceListener
+	 */
 	public void addJarDiceListener(DiceListener diceListener) {
 		jarListenerList.add(diceListener);
 	}
@@ -50,6 +58,9 @@ public class DiceModel {
 		spinnerListenerList.add(diceListener);
 	}
 	
+	/**
+	 * Reset all dice of the model to 0.
+	 */
 	public void newSession() {
 		Iterator<Class<? extends Dice>> it = this.getIterator();
 		while(it.hasNext()) {
@@ -85,12 +96,7 @@ public class DiceModel {
 			firing = false;
 		}
 	}
-	public void reset(){
-		Iterator<Class<? extends Dice>> it = diceMap.keySet().iterator();
-		while(it.hasNext()){
-			changeElement(it.next(), 0);
-		}
-	}
+	
 	public Object getElementAt(int index) {
 		if(index>=this.getSize())
 			throw new ArrayIndexOutOfBoundsException("Trying to access an object out of bounds!");
