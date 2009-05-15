@@ -82,5 +82,4 @@ public class TotalThrowModel extends AbstractTableModel{
 			return null;
 		return diceResults.get(throwIndex).getElementAt(diceIndex);
 	}
-
 }
