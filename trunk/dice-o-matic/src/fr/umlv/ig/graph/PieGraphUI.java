@@ -179,6 +179,8 @@ public class PieGraphUI extends GraphUI{
 				val = (Integer)model.getValueAt(j,i);
 				if(val==null)
 					break;
+				if(sum==0)//Should not be possible
+					return;
 				arcAngle = (val*360)/sum ;
 				g2.setColor(graph.getColor());
 				if(i==col-1)

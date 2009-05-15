@@ -20,7 +20,7 @@ import javax.swing.table.TableModel;
 /**
  * This is a implementation of @link fr.umlv.ig.graph.GraphUI
  * This implementation is a UI for @link fr.umlv.ig.graph.JGraph
- * it display the JGraph as a aistogram
+ * it display the JGraph as a histogram
  * @author Clement Lebreton & Jordane Marcel
  */
 public class HistogramGraphUI extends GraphUI{
@@ -177,6 +177,8 @@ public class HistogramGraphUI extends GraphUI{
 				maxPercent = (double)localMax*100/(double)localSum;
 			}
 		}
+		if(max<=0)//TODO
+			return;
 		for(int i=10;i<maxPercent;i=i+10){
 			double tmp = i*max/maxPercent*(h-Ymarge*2);
 			int barHeight = (int)tmp/(int)max;

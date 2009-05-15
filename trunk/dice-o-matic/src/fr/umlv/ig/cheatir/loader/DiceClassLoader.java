@@ -61,7 +61,7 @@ public class DiceClassLoader extends URLClassLoader{
 		for(Class<?> type : types){
 			if(!type.getCanonicalName().equals("int")
 					&& !type.getCanonicalName().equals("float")
-					&& !type.getCanonicalName().equals("String")){
+					&& !type.getCanonicalName().equals("java.lang.String")){
 				if(useBoolean)
 					return false;
 				throw new IllegalArgumentException("Incorrect parameter type");

@@ -219,7 +219,7 @@ public abstract class PanelFactory {
 						if(typesArray[i].getCanonicalName().equals("float")){
 							args[i] = Float.parseFloat(fields[i].getText());
 						}
-						if(typesArray[i].getCanonicalName().equals("String")){
+						if(typesArray[i].getCanonicalName().equals("java.lang.String")){
 							args[i] = fields[i].getText();
 						}
 					}
