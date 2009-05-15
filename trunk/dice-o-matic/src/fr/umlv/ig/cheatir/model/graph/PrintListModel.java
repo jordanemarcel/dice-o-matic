@@ -20,6 +20,7 @@ public class PrintListModel extends AbstractListModel{
 	private final LinkedList<Integer> randColList;
 	private final HashMap<Integer,Integer> randRowMap;
 	private boolean shuffle;
+	private boolean contentChange;
 	/**
 	 * Constructs a PrintListModel, its data are contains in the given TotalThrowModel.
 	 * @param model - contains the data of this adaptor, model should not be null.
@@ -29,15 +30,19 @@ public class PrintListModel extends AbstractListModel{
 			throw new IllegalArgumentException("model should not be null");
 		this.model = model;
 		shuffle = false;
+		contentChange = false;
 		randColList = new LinkedList<Integer>();
 		randRowMap = new HashMap<Integer,Integer>();
 		updateRandomList();
 		this.model.addTableModelListener(new TableModelListener(){
 			@Override
 			public void tableChanged(TableModelEvent e) {
+				contentChange = true;
 				if(PrintListModel.this.shuffle){
 					updateRandomList();
+					contentChange = false;
 				}
+				
 				fireIntervalAdded(this,e.getFirstRow(), e.getLastRow());
 			}
 		});
@@ -70,10 +75,13 @@ public class PrintListModel extends AbstractListModel{
 	 * @param bool - For enable shuffle mode set true, for disable it set false.
 	 */
 	public void setShuffle(boolean bool){
-		if(bool)
+		if(contentChange && bool){
 			updateRandomList();
-		if(shuffle!=bool)
+			contentChange = false;
+		}
+		if(shuffle!=bool){
 			fireContentsChanged(this, 0, getSize());
+		}
 		shuffle = bool;	
 	}
 	/**
