@@ -70,7 +70,7 @@ public class PrintListModel extends AbstractListModel{
 	 * @param bool - For enable shuffle mode set true, for disable it set false.
 	 */
 	public void setShuffle(boolean bool){
-		if(shuffle)
+		if(bool)
 			updateRandomList();
 		if(shuffle!=bool)
 			fireContentsChanged(this, 0, getSize());
