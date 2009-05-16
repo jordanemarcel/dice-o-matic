@@ -31,8 +31,13 @@ public class StatDiceModel extends AbstractTableModel{
 			throw new IllegalArgumentException("The model should not be null!");
 		}
 		this.model = model;
+//		if(model.getRowCount()<sampling) {
+//			this.sampling = model.getRowCount();
+//		} else {
+//			this.sampling = sampling;
+//		}
 		this.sampling = sampling;
-		this.row = (int)Math.ceil(((double)model.getRowCount())/sampling);
+		this.row = (int)Math.ceil(((double)model.getRowCount())/this.sampling);
 		data = new int[row][this.getColumnCount()];
 		for(int i = 0;i<row;i++){
 			Arrays.fill(data[i], -1);
@@ -83,7 +88,6 @@ public class StatDiceModel extends AbstractTableModel{
 		}
 		try{
 			for(int i = start; i< start+sampling; i++){
-				System.out.println(start+" "+sampling+" "+i);
 				for(int j=0;j<col;j++){
 					Integer val = (Integer)model.getValueAt(i, j);
 					if(val==null)

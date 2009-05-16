@@ -70,7 +70,7 @@ public class JGraph extends JComponent implements Scrollable{
 			this.colors = new Color[]{Color.BLUE,Color.RED,Color.YELLOW,Color.GREEN,Color.ORANGE,Color.PINK};
 		}
 		this.colorIndex = 0;
-		this.currentType = GraphType.PIE;
+		this.currentType = GraphType.HISTOGRAM;
 		this.updateUI();
 		model.addTableModelListener(new TableModelListener(){
 			@Override

@@ -4,9 +4,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -65,18 +67,21 @@ public class HistogramGraphUI extends GraphUI{
 		return new HistogramGraphUI(component);
 	}
 	
-	MouseAdapter mouseLegendAdapter = new MouseAdapter(){
+	MouseMotionListener mouseLegendAdapter = new MouseMotionListener() {
+		
+
 		@Override
-		public void mousePressed(MouseEvent e) {
-			if(e.getButton()==MouseEvent.BUTTON3){
+		public void mouseMoved(MouseEvent e) {
+			boolean over = false;
 				for(Rectangle rectangle : recList){
-					if(legendShape !=null && legendShape.contains(e.getPoint())){
-						legend = null;
-						legendShape = null;
-						e.getComponent().repaint();
-						return;
-					}
+//					if(legendShape !=null && legendShape.contains(e.getPoint())){
+//						legend = null;
+//						legendShape = null;
+//						e.getComponent().repaint();
+//						return;
+//					}
 					if(rectangle.contains(e.getPoint())){
+						over = true;
 						BufferedImage img = new BufferedImage(120,100,BufferedImage.TYPE_INT_ARGB);
 						Graphics2D imgG = (Graphics2D) img.getGraphics();
 						Color c = new Color(200,250,0,200);
@@ -92,15 +97,28 @@ public class HistogramGraphUI extends GraphUI{
 						imgG.dispose();
 						legend=img;
 						legendShape = new Rectangle(120,100);
-						legendShape.setLocation(e.getPoint());
+						Point p = e.getPoint();
+						legendShape.setLocation(new Point(e.getX()+15,e.getY()+15));
 						rectangleIndex = recList.indexOf(rectangle);
 						e.getComponent().repaint();
 						return;
 					}	
 				}
-			}
+				if(!over) {
+					legend = null;
+					legendShape = null;
+					e.getComponent().repaint();
+					return;
+				}
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
 		}
 	};
+
 	/**
 	 * Configures the specified component appropriate for the look and feel.
 	 * This install a mouse listener which is responsible for paint legend on right click.
@@ -108,7 +126,7 @@ public class HistogramGraphUI extends GraphUI{
 	 */
 	@Override
 	public void installUI(JComponent c) {
-		graph.addMouseListener(mouseLegendAdapter);
+		graph.addMouseMotionListener(mouseLegendAdapter);
 	}
 	/**
 	 * Reverses configuration which was done on the specified component during installUI.
@@ -116,7 +134,7 @@ public class HistogramGraphUI extends GraphUI{
 	 */
 	@Override
 	public void uninstallUI(JComponent c) {
-		graph.removeMouseListener(mouseLegendAdapter);
+		graph.removeMouseMotionListener(mouseLegendAdapter);
 	}
 
 	/**
@@ -159,7 +177,8 @@ public class HistogramGraphUI extends GraphUI{
 		//draw X axis
 		g2d.fillRect(Xmarge,h-Ymarge,w-3*xInset,thickness);
 		//draw Y axis
-		g2d.fillRect(Xmarge, Ymarge, thickness, h-(Ymarge*2));		
+		g2d.fillRect(Xmarge, Ymarge, thickness, h-(Ymarge*2));
+		g2d.drawString("%", Xmarge-10, Ymarge-5);
 		for(int i=0;i<row;i++){
 			Integer val = null;
 			int localMax = -1;
@@ -201,6 +220,8 @@ public class HistogramGraphUI extends GraphUI{
 					localMax = barHeight;
 				g2d.setColor(graph.getColor());
 				g2d.fillRect(currentX,h-Ymarge-barHeight,barWidth,barHeight);
+				g2d.setColor(Color.black);
+				g2d.drawString(Integer.toString(j+1), currentX+2, h-3);
 				currentX = currentX + (barWidth+separator);
 				legendText[j]=j+1+" :"+val+"=>"+roundOff(val*maxPercent/max)+"%";
 			}
