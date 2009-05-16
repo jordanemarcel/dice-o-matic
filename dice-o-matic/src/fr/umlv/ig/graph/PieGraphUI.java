@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
@@ -255,6 +256,10 @@ public class PieGraphUI extends GraphUI{
 				if(val==null)
 					break;
 				sum = sum + val;
+			}
+			if(xPos<1000) {
+				System.out.println("Position: " + xPos);
+				System.out.println("Position: " + xPos);
 			}
 			Ellipse2D circle = new Ellipse2D.Double(xPos,yPos,graphRaduis,graphRaduis);
 			circleList.add(circle);
