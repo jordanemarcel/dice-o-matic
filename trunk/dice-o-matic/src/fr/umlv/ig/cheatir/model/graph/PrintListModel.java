@@ -2,7 +2,6 @@ package fr.umlv.ig.cheatir.model.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
