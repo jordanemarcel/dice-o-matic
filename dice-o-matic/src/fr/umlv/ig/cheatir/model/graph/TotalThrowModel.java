@@ -3,7 +3,6 @@ package fr.umlv.ig.cheatir.model.graph;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.print.attribute.standard.Sides;
 import javax.swing.table.AbstractTableModel;
 
 /**

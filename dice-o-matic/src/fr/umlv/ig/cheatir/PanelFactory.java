@@ -15,8 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -37,7 +35,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
@@ -56,10 +53,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import fr.umlv.ig.cheatir.loader.ClassTool;
@@ -75,7 +68,6 @@ import fr.umlv.ig.graph.JGraph;
 import fr.umlv.ig.graph.JGraph.GraphType;
 import fr.umlv.ig.misc.Dice;
 import fr.umlv.ig.misc.DiceDescription;
-import fr.umlv.ig.misc.FairDice;
 /**
  * The CheatIr panel factory. This factory enable to create all panel
  * of this application.
