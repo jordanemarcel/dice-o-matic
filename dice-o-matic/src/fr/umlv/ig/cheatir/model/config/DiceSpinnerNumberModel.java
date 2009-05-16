@@ -6,8 +6,8 @@ import javax.swing.event.ChangeListener;
 
 import fr.umlv.ig.misc.Dice;
 
+@SuppressWarnings("serial")
 public class DiceSpinnerNumberModel extends SpinnerNumberModel {
-	private static final long serialVersionUID = 1L;
 	private final Class<? extends Dice> diceClass;
 	private final DiceModel model;
 	
@@ -20,7 +20,7 @@ public class DiceSpinnerNumberModel extends SpinnerNumberModel {
 
 			@Override
 			public void diceAdded() {
-				/* */
+				//no use
 			}
 
 			@Override
@@ -83,5 +83,5 @@ public class DiceSpinnerNumberModel extends SpinnerNumberModel {
 	public Number getNumber() {
 		return model.getDiceNumber(diceClass);
 	}
-
+	
 }

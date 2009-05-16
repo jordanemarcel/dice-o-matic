@@ -1,5 +1,6 @@
 package fr.umlv.ig.cheatir.model.graph;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,8 +18,8 @@ import javax.swing.event.TableModelListener;
 @SuppressWarnings("serial")
 public class PrintListModel extends AbstractListModel{
 	private final TotalThrowModel model;
-	private final LinkedList<Integer> randColList;
-	private final HashMap<Integer,Integer> randRowMap;
+	private final ArrayList<LinkedList<Integer>> randColList;
+//	private final HashMap<Integer,Integer> randRowMap;
 	private boolean shuffle;
 	private boolean contentChange;
 	/**
@@ -31,8 +32,8 @@ public class PrintListModel extends AbstractListModel{
 		this.model = model;
 		shuffle = false;
 		contentChange = false;
-		randColList = new LinkedList<Integer>();
-		randRowMap = new HashMap<Integer,Integer>();
+		randColList = new ArrayList<LinkedList<Integer>>();
+//		randRowMap = new HashMap<Integer,Integer>();
 		updateRandomList();
 		this.model.addTableModelListener(new TableModelListener(){
 			@Override
@@ -49,19 +50,25 @@ public class PrintListModel extends AbstractListModel{
 	}
 	private void updateRandomList(){
 		randColList.clear();
-		randRowMap.clear();
-		for(int i=0;i<PrintListModel.this.model.getColumnCount();i++){
-			randColList.add(i);
-		}
-		LinkedList<Integer> randRowList = new LinkedList<Integer>();
+//		randRowMap.clear();
+		
 		for(int i=0;i<PrintListModel.this.model.getRowCount();i++){
-			randRowList.add(i);
+			LinkedList<Integer> randomRow = new LinkedList<Integer>();
+			for(int j=0;j<PrintListModel.this.model.getColumnCount();j++){
+				randomRow.add(j);
+			}
+			Collections.shuffle(randomRow);
+			randColList.add(randomRow);
 		}
-		Collections.shuffle(randColList);
-		Collections.shuffle(randRowList);
-		for(int i=0;i<PrintListModel.this.model.getRowCount();i++){
-			randRowMap.put(i, randRowList.removeFirst());
-		}
+//		LinkedList<Integer> randRowList = new LinkedList<Integer>();
+//		for(int i=0;i<PrintListModel.this.model.getRowCount();i++){
+//			randRowList.add(i);
+//		}
+//		Collections.shuffle(randColList);
+//		Collections.shuffle(randRowList);
+//		for(int i=0;i<PrintListModel.this.model.getRowCount();i++){
+//			randRowMap.put(i, randRowList.removeFirst());
+//		}
 	}
 	/**
 	 * Returns true if the shuffle mode is enable, false otherwise.
@@ -93,15 +100,15 @@ public class PrintListModel extends AbstractListModel{
 	public Object getElementAt(int index) {
 		StringBuilder sb = new StringBuilder();
 		if(shuffle){
-			Iterator<Integer> it = randColList.iterator();
+			Iterator<Integer> it = randColList.get(index).iterator();
 			while(it.hasNext()){
-				sb.append(model.getValueAt(randRowMap.get(index),it.next()));
-				sb.append(",");
+				sb.append(model.getValueAt(index,it.next()));
+				sb.append(" ");
 			}
 		}else{
 			for(int i=0;i<model.getColumnCount();i++){
 				sb.append(model.getValueAt(index, i));
-				sb.append(",");
+				sb.append(" ");
 			}
 		}
 		return sb.toString().substring(0, sb.toString().length()-1);

@@ -6,9 +6,11 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -63,6 +65,65 @@ public class PieGraphUI extends GraphUI{
 			}
 		});
 	}
+	
+	
+	MouseMotionListener mouseLegendAdapter = new MouseMotionListener() {
+		
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			boolean over = false;
+			for(Ellipse2D circle : circleList){
+//				if(legendShape !=null && legendShape.contains(e.getPoint())){
+//					legend = null;
+//					legendShape = null;
+//					e.getComponent().repaint();
+//					return;
+//				}
+				if(circle.contains(e.getPoint())){
+					over = true;
+					BufferedImage img = new BufferedImage(120,100,BufferedImage.TYPE_INT_ARGB);
+					Graphics2D imgG = (Graphics2D) img.getGraphics();
+					FontMetrics fm = imgG.getFontMetrics();
+					Color c = new Color(200,250,0,200);
+					imgG.setColor(c);
+					imgG.fillRect(0, 0, 120, 100);
+					imgG.setColor(Color.BLACK);
+					imgG.drawRect(0, 0, 119, 99);
+					int col = graph.getModel().getColumnCount();
+					String text[] = circleMap.get(circle);
+					int maxWidth = -1;
+					for(int i=0;i<col;i++){
+						int tmp;
+						if ((tmp = fm.stringWidth(text[i]))>maxWidth)
+							maxWidth = tmp;
+						imgG.drawString(text[i], 5, 15+15*i);
+					}
+					
+					imgG.dispose();
+					legend=img;
+					legendShape = new Rectangle(120,100);
+					legendShape.setLocation(new Point(e.getX()+15, e.getY()+15));
+					circleIndex = circleList.indexOf(circle);
+					e.getComponent().repaint();
+					return;
+				}
+			}
+			if(!over) {
+				legend = null;
+				legendShape = null;
+				e.getComponent().repaint();
+				return;
+			}
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
+
 	/**
 	 * Configures the specified component appropriate for the look and feel.
 	 * This install a mouse listener which is responsible for paint legend on right click.
@@ -70,7 +131,7 @@ public class PieGraphUI extends GraphUI{
 	 */
 	@Override
 	public void installUI(JComponent c) {
-		graph.addMouseListener(mouseLegendAdapter);
+		graph.addMouseMotionListener(mouseLegendAdapter);
 	}
 	/**
 	 * Reverses configuration which was done on the specified component during installUI.
@@ -78,58 +139,82 @@ public class PieGraphUI extends GraphUI{
 	 */
 	@Override
 	public void uninstallUI(JComponent c) {
-		graph.removeMouseListener(mouseLegendAdapter);
+		graph.removeMouseMotionListener(mouseLegendAdapter);
 	}
-	/**
-	 * This method is called for create the UI of a component
-	 * @param component Create an UI for the given component
-	 * @return the created UI
-	 */
+
+
 	public static ComponentUI createUI(JComponent c){
 		return new PieGraphUI(c);
 	}
-	MouseAdapter mouseLegendAdapter = new MouseAdapter(){
-		@Override
-		public void mousePressed(MouseEvent e) {
-			if(e.getButton()==MouseEvent.BUTTON3){
-				for(Ellipse2D circle : circleList){
-					if(legendShape !=null && legendShape.contains(e.getPoint())){
-						legend = null;
-						legendShape = null;
-						e.getComponent().repaint();
-						return;
-					}
-					if(circle.contains(e.getPoint())){
-						BufferedImage img = new BufferedImage(100,100,BufferedImage.TYPE_INT_ARGB);
-						Graphics2D imgG = (Graphics2D) img.getGraphics();
-						FontMetrics fm = imgG.getFontMetrics();
-						Color c = new Color(200,250,0,200);
-						imgG.setColor(c);
-						imgG.fillRect(0, 0, 100, 100);
-						imgG.setColor(Color.BLACK);
-						imgG.drawRect(0, 0, 99, 99);
-						int col = graph.getModel().getColumnCount();
-						String text[] = circleMap.get(circle);
-						int maxWidth = -1;
-						for(int i=0;i<col;i++){
-							int tmp;
-							if ((tmp = fm.stringWidth(text[i]))>maxWidth)
-								maxWidth = tmp;
-							imgG.drawString(text[i], 5, 15+15*i);
-						}
-						
-						imgG.dispose();
-						legend=img;
-						legendShape = new Rectangle(100,100);
-						legendShape.setLocation(e.getPoint());
-						circleIndex = circleList.indexOf(circle);
-						e.getComponent().repaint();
-						return;
-					}	
-				}
-			}
-		}
-	};
+
+
+//	/**
+//	 * Configures the specified component appropriate for the look and feel.
+//	 * This install a mouse listener which is responsible for paint legend on right click.
+//	 * @param c the component where this UI delegate is being installed    
+//	 */
+//	@Override
+//	public void installUI(JComponent c) {
+//		graph.addMouseListener(mouseLegendAdapter);
+//	}
+//	/**
+//	 * Reverses configuration which was done on the specified component during installUI.
+//	 * @param c the component from which this UI delegate is being removed.
+//	 */
+//	@Override
+//	public void uninstallUI(JComponent c) {
+//		graph.removeMouseListener(mouseLegendAdapter);
+//	}
+//	/**
+//	 * This method is called for create the UI of a component
+//	 * @param component Create an UI for the given component
+//	 * @return the created UI
+//	 */
+//	public static ComponentUI createUI(JComponent c){
+//		return new PieGraphUI(c);
+//	}
+//	MouseAdapter mouseLegendAdapter = new MouseAdapter(){
+//		@Override
+//		public void mousePressed(MouseEvent e) {
+//			if(e.getButton()==MouseEvent.BUTTON3){
+//				for(Ellipse2D circle : circleList){
+//					if(legendShape !=null && legendShape.contains(e.getPoint())){
+//						legend = null;
+//						legendShape = null;
+//						e.getComponent().repaint();
+//						return;
+//					}
+//					if(circle.contains(e.getPoint())){
+//						BufferedImage img = new BufferedImage(100,100,BufferedImage.TYPE_INT_ARGB);
+//						Graphics2D imgG = (Graphics2D) img.getGraphics();
+//						FontMetrics fm = imgG.getFontMetrics();
+//						Color c = new Color(200,250,0,200);
+//						imgG.setColor(c);
+//						imgG.fillRect(0, 0, 100, 100);
+//						imgG.setColor(Color.BLACK);
+//						imgG.drawRect(0, 0, 99, 99);
+//						int col = graph.getModel().getColumnCount();
+//						String text[] = circleMap.get(circle);
+//						int maxWidth = -1;
+//						for(int i=0;i<col;i++){
+//							int tmp;
+//							if ((tmp = fm.stringWidth(text[i]))>maxWidth)
+//								maxWidth = tmp;
+//							imgG.drawString(text[i], 5, 15+15*i);
+//						}
+//						
+//						imgG.dispose();
+//						legend=img;
+//						legendShape = new Rectangle(100,100);
+//						legendShape.setLocation(e.getPoint());
+//						circleIndex = circleList.indexOf(circle);
+//						e.getComponent().repaint();
+//						return;
+//					}	
+//				}
+//			}
+//		}
+//	};
 	/**
 	 * Returns the specified component's preferred size appropriate for the look and feel
 	 * @param c the component whose preferred size is being queried; this argument is often

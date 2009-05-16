@@ -1,10 +1,11 @@
 package fr.umlv.ig.cheatir;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,7 +14,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -33,14 +33,14 @@ public class Main {
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		f.setSize(640, 480);
 		JPanel p = new JPanel(new BorderLayout());
+		p.setBackground(Color.white);
 		f.setContentPane(p);
-		JLabel title = new JLabel("Dice-o-matic");
-		title.setHorizontalAlignment(SwingConstants.CENTER);
-		title.setFont(new Font("Arial",Font.BOLD,30));
-		p.add(title, BorderLayout.NORTH);
+		JLabel logo = new JLabel(new ImageIcon(Main.class.getResource("diceomatic.jpg")));
+		p.add(logo, BorderLayout.CENTER);
 		JMenuBar menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem newWorkspace = new JMenuItem("New workspace");
+		newWorkspace.setIcon(new ImageIcon(Main.class.getResource("star.gif")));
 		newWorkspace.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -63,6 +63,7 @@ public class Main {
 			}
 		});
 		JMenuItem importItem = new JMenuItem("Import Dices");
+		importItem.setIcon(new ImageIcon(Main.class.getResource("plus.gif")));
 		importItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -75,6 +76,7 @@ public class Main {
 			}
 		});
 		JMenuItem quitItem = new JMenuItem("Quit");
+		quitItem.setIcon(new ImageIcon(Main.class.getResource("quit.gif")));
 		quitItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -35,6 +37,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
@@ -53,8 +56,13 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import fr.umlv.ig.cheatir.loader.ClassTool;
 import fr.umlv.ig.cheatir.model.config.DiceListModel;
 import fr.umlv.ig.cheatir.model.config.DiceListener;
 import fr.umlv.ig.cheatir.model.config.DiceModel;
@@ -83,12 +91,28 @@ public abstract class PanelFactory {
 	public static JPanel createWorkspacePanel(final JFrame parent ,final DiceModel model) {
 		JPanel newWorkspace = new JPanel();
 		newWorkspace.setLayout(new BorderLayout());
-		JButton validate = new JButton("Validate");
+		final JButton validate = new JButton("Validate");
+		validate.setEnabled(false);
+		model.addSpinnerDiceListener(new DiceListener() {
+
+			@Override
+			public void diceAdded() {
+				//do nothing
+			}
+
+			@Override
+			public void diceValueChanged() {
+				if(model.getTotalDiceNumber()>0) {
+					validate.setEnabled(true);
+				} else {
+					validate.setEnabled(false);
+				}
+			}
+			
+		});
 		validate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(model.getTotalDiceNumber()<=0)
-					return;
 				LinkedList<Dice> ll = launchDiceConfiguration(parent,model);
 				if(ll == null)
 					return;
@@ -160,8 +184,14 @@ public abstract class PanelFactory {
 			Class<? extends Dice> diceClass = (Class<? extends Dice>) it.next();
 			Integer nb = model.getDiceNumber(diceClass);
 			for(int i=0;i<nb;i++){
-				if(diceClass.equals(FairDice.class)){
-					diceList.add(new FairDice());
+				if(ClassTool.hasUniqueConstructorArguments(diceClass)){
+					try {
+						diceList.add(diceClass.newInstance());
+					} catch (InstantiationException e1) {
+						showMessageErrorDialog("Can't create a \""+diceClass.getSimpleName()+"\" dice: Unexpected error", parent);
+					} catch (IllegalAccessException e1) {
+						showMessageErrorDialog("Can't create a \""+diceClass.getSimpleName()+"\" dice: Access denied", parent);
+					}
 					continue;
 				}
 				JDialog dialog = new JDialog((JFrame)parent);
@@ -173,7 +203,7 @@ public abstract class PanelFactory {
 						p.setEnabled(false);
 					}
 				});
-				dialog.setTitle("Configure the dice");
+				dialog.setTitle(diceClass.getSimpleName() + ": " + (i+1) + "/" + nb);
 				dialog.setContentPane(p);
 				dialog.pack();
 				dialog.setLocationRelativeTo(parent);
@@ -197,7 +227,8 @@ public abstract class PanelFactory {
 		//panel.setBorder(BorderFactory.createTitledBorder(text[0]));
 		JPanel panel = new JPanel(new GridLayout((text.length-1),2));
 		JLabel desc = new JLabel(text[0]);
-		panel.add(desc);
+		desc.setFont(new Font("Arial", Font.ITALIC, 12));
+		panel.setBorder(BorderFactory.createTitledBorder("Configuration"));
 		for(int i=1;i<text.length;i++){
 			panel.add(new JLabel(text[i]));
 			fields[i-1] = new JTextField();
@@ -254,9 +285,15 @@ public abstract class PanelFactory {
 		});
 		return mainPanel;
 	}
+	
 	private static void showFieldErrorDialog(Component parent){
 		JOptionPane.showMessageDialog(parent,"Incorrect field value! Please fill field with valid parameter.","Error",JOptionPane.ERROR_MESSAGE);	
 	}
+	
+	private static void showMessageErrorDialog(String message, Component parent){
+		JOptionPane.showMessageDialog(parent,message,"Error",JOptionPane.ERROR_MESSAGE);	
+	}
+	
 	public static JPanel createJarImportPanel(final Window window, final DiceModel model) {
 		final JPanel newJarPanel = new JPanel();
 
@@ -270,13 +307,15 @@ public abstract class PanelFactory {
 					Object value, int index, boolean isSelected,
 					boolean cellHasFocus) {
 				Class<?> clazz = (Class<?>) value;
+				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 				this.setText(clazz.getSimpleName());
 				return this;
 			}
 		});
 		JScrollPane jsp = new JScrollPane(diceList);
+		jsp.setBorder(BorderFactory.createTitledBorder("Dice loaded:"));
 		newJarPanel.add(jsp,BorderLayout.CENTER);
-		newJarPanel.add(new JLabel("Dice loaded:"),BorderLayout.NORTH);
+		//newJarPanel.add(new JLabel("Dice loaded:"),BorderLayout.NORTH);
 		JPanel east = new JPanel(new GridBagLayout());
 		JButton addJar = new JButton("Import a JarFile");
 		addJar.addActionListener(new ActionListener(){
@@ -302,6 +341,7 @@ public abstract class PanelFactory {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill=GridBagConstraints.HORIZONTAL;
 		gbc.gridwidth=GridBagConstraints.REMAINDER;
+		gbc.insets=new Insets(10,0,0,0);
 		east.add(addJar,gbc);
 		gbc.insets=new Insets(5,0,0,0);
 		east.add(close,gbc);
@@ -310,6 +350,8 @@ public abstract class PanelFactory {
 		newJarPanel.add(east,BorderLayout.EAST);
 		return newJarPanel;
 	}
+	
+	
 	@SuppressWarnings("serial")
 	public static JPanel createSessionPanel(final DiceThrower thrower){
 		final TotalThrowModel total = new TotalThrowModel();
@@ -422,6 +464,7 @@ public abstract class PanelFactory {
 		rethrow.setBorder(BorderFactory.createTitledBorder("Throw dice!"));
 		rethrow.add(new JLabel("Throw count :"));
 		final JFormattedTextField throwCountField = new JFormattedTextField(integerFormatter);
+		throwCountField.setText("1000");
 		rethrow.add(throwCountField);
 		final JButton throwButton = new JButton("Throw !");
 		rethrow.add(throwButton);
@@ -433,7 +476,7 @@ public abstract class PanelFactory {
 		graphManager.add(selecetedDice);
 		graphManager.add(new JLabel("Sampling :"));
 		final JFormattedTextField sampling = new JFormattedTextField(integerFormatter);
-		sampling.setText("1");
+		sampling.setText("100");
 		graphManager.add(sampling);
 		final JButton createView = new JButton("Create View");
 		createView.setEnabled(false);
@@ -443,13 +486,13 @@ public abstract class PanelFactory {
 		final JList listResult = new JList(printModel);
 		//create a good prototype cell
 		StringBuilder protoCell = new StringBuilder();
-		int tmp = 2*thrower.getDices().size();
+		int tmp = thrower.getDices().size();
 		for(int i=0;i<tmp;i++)
-			protoCell.append("1");
-		listResult.setPrototypeCellValue(protoCell.toString());
+			protoCell.append("X ");
+		listResult.setPrototypeCellValue(protoCell);
 		JScrollPane resultJsp = new JScrollPane(listResult);
+		resultJsp.setPreferredSize(new Dimension(1,1));
 		final JCheckBox sortButton = new JCheckBox("Shuffle result");
-
 		final JPanel resultPanel = new JPanel(new BorderLayout());
 		resultPanel.add(resultJsp,BorderLayout.CENTER);
 		resultPanel.add(sortButton,BorderLayout.SOUTH);
@@ -472,7 +515,7 @@ public abstract class PanelFactory {
 		rightgbc.gridwidth = GridBagConstraints.REMAINDER;
 		rightgbc.insets=new Insets(0,0,0,0);
 		rightgbc.weighty=1;
-		rightgbc.weightx=1;		
+		rightgbc.weightx=1;
 		final JPanel filler = new JPanel();
 		rightPanel.add(filler,rightgbc);
 		//Right panel End
@@ -503,7 +546,7 @@ public abstract class PanelFactory {
 		sortButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				//do nothing
 			}
 		});
 
@@ -552,7 +595,7 @@ public abstract class PanelFactory {
 				DiceSelectorModel selector = new DiceSelectorModel(total);
 				AbstractFormatter setFormatter = selecetedDice.getFormatter();
 				AbstractFormatter intFormatter = sampling.getFormatter();
-				Integer sample = 1;
+				Integer sample = 100;
 				try {
 					/* This cast is sure because this JFormattedTextField use my own Formatter and it s return a Set<Integer>*/
 					Set<Integer> set = (Set<Integer>) setFormatter.stringToValue(selecetedDice.getText());
@@ -576,8 +619,9 @@ public abstract class PanelFactory {
 						}
 					}
 				});
-				String title = +selector.getColumnCount()+" dice"+" sampled by "+sample;
-				rightPanel.add(createGraphicPanel(g,title),rightgbc);
+				String title = "Sample of size "+sample;
+				final JPanel graphic = createGraphicPanel(g,title);
+				rightPanel.add(graphic,rightgbc);
 				rightgbc.weighty=1;
 				rightPanel.add(filler,rightgbc);
 				rightgbc.weighty=0;
@@ -621,7 +665,7 @@ public abstract class PanelFactory {
 		JPanel title = new JPanel(new BorderLayout());
 		title.setBackground(Color.BLACK);
 		title.add(close,BorderLayout.EAST);
-		JLabel name = new JLabel("Graph : "+graphTitle);
+		JLabel name = new JLabel(graphTitle);
 		name.setForeground(Color.WHITE);
 		name.setPreferredSize(new Dimension(0,0));
 		title.add(name,BorderLayout.CENTER);
