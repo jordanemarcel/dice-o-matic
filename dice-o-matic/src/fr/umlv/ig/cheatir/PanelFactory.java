@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -35,6 +37,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
@@ -53,6 +56,10 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import fr.umlv.ig.cheatir.loader.ClassTool;
@@ -64,20 +71,21 @@ import fr.umlv.ig.cheatir.model.graph.DiceSelectorModel;
 import fr.umlv.ig.cheatir.model.graph.PrintListModel;
 import fr.umlv.ig.cheatir.model.graph.StatDiceModel;
 import fr.umlv.ig.cheatir.model.graph.TotalThrowModel;
+import fr.umlv.ig.dice.Dice;
+import fr.umlv.ig.dice.DiceDescription;
+import fr.umlv.ig.dice.FairDice;
 import fr.umlv.ig.graph.JGraph;
 import fr.umlv.ig.graph.JGraph.GraphType;
-import fr.umlv.ig.misc.Dice;
-import fr.umlv.ig.misc.DiceDescription;
 /**
  * The CheatIr panel factory. This factory enable to create all panel
- * of this application.
+ * for this application.
  * @author Clement Lebreton & Jordane Marcel
  */
 public abstract class PanelFactory {
 	/**
-	 * 
-	 * @param parent
-	 * @param model
+	 * This static method returns the panel of the configuration of the dice.
+	 * @param parent - the parent Jframe
+	 * @param model - the program DiceModel
 	 * @return the configured panel
 	 */
 	public static JPanel createWorkspacePanel(final JFrame parent ,final DiceModel model) {
@@ -137,6 +145,13 @@ public abstract class PanelFactory {
 		});
 		return newWorkspace;
 	}
+	
+	/**
+	 * Returns the panel associated with each type of Dice. Each panel is required by
+	 * the WorkspacePanel.
+	 * @param model - the DiceModel
+	 * @return a JPanel that represents a Dice
+	 */
 	private static JPanel getDiceSelectorPanel(final DiceModel model) {
 		JPanel dicePanel = new JPanel();
 		dicePanel.setLayout(new GridBagLayout());
@@ -169,11 +184,18 @@ public abstract class PanelFactory {
 		return dicePanel;
 	}
 
+	/**
+	 * This method returns the list of Dice that have been configured. For each dice with constructor arguments,
+	 * a JDialog is shown, ready to be configured.
+	 * @param parent - the parent JFrame
+	 * @param model - the DiceModel
+	 * @return The list of Dice that have been configured
+	 */
 	private static LinkedList<Dice> launchDiceConfiguration(Component parent, DiceModel model){
 		Iterator<Class<? extends Dice>> it =  model.getIterator();
 		final LinkedList<Dice> diceList = new LinkedList<Dice>();
 		while (it.hasNext()) {
-			Class<? extends Dice> diceClass = (Class<? extends Dice>) it.next();
+			Class<? extends Dice> diceClass = it.next();
 			Integer nb = model.getDiceNumber(diceClass);
 			for(int i=0;i<nb;i++){
 				if(ClassTool.hasUniqueConstructorArguments(diceClass)){
@@ -209,6 +231,13 @@ public abstract class PanelFactory {
 
 	}
 
+	/**
+	 * This method shows a configuration JDialog associated with a type of Dice times the number requested.
+	 * @param window - The parent window
+	 * @param diceClass - the class of the given dice
+	 * @param diceList - the list in which the dice will be added
+	 * @return - the JPanel of the configuration of the dice
+	 */
 	private static JPanel createConfigurationDicePanel(final JDialog window, Class<? extends Dice> diceClass,final LinkedList<Dice> diceList){
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		final Constructor<?> constructor = diceClass.getConstructors()[0];
@@ -278,14 +307,29 @@ public abstract class PanelFactory {
 		return mainPanel;
 	}
 	
+	/**
+	 * Shows an error box about an incorect field.
+	 * @param parent - the parent component
+	 */
 	private static void showFieldErrorDialog(Component parent){
 		JOptionPane.showMessageDialog(parent,"Incorrect field value! Please fill field with valid parameter.","Error",JOptionPane.ERROR_MESSAGE);	
 	}
 	
+	/**
+	 * Show an error box about a given message
+	 * @param message - the given message
+	 * @param parent - the parent component
+	 */
 	private static void showMessageErrorDialog(String message, Component parent){
 		JOptionPane.showMessageDialog(parent,message,"Error",JOptionPane.ERROR_MESSAGE);	
 	}
 	
+	/**
+	 * Creates the panel that it uses to import JarFiles.
+	 * @param window - the parent window
+	 * @param model - the DiceModel (new Dice classes will be loaded in it)
+	 * @return the JPanel
+	 */
 	public static JPanel createJarImportPanel(final Window window, final DiceModel model) {
 		final JPanel newJarPanel = new JPanel();
 
@@ -343,7 +387,12 @@ public abstract class PanelFactory {
 		return newJarPanel;
 	}
 	
-	
+	/**
+	 * This method creates the main Session Panel that is used to throw the dice, samples
+	 * them and shows the graphics.
+	 * @param thrower - the DiceThrower that is used to throw the selected dices
+	 * @return the Session JPanel
+	 */
 	@SuppressWarnings("serial")
 	public static JPanel createSessionPanel(final DiceThrower thrower){
 		final TotalThrowModel total = new TotalThrowModel();
@@ -636,6 +685,13 @@ public abstract class PanelFactory {
 		/* *********************************** */
 		return panel;
 	}
+	
+	/**
+	 * This method creates and returns Graphic panel that contains a graphic.
+	 * @param component - the given graphic
+	 * @param graphTitle - the title of the graph
+	 * @return the JPanel
+	 */
 	public static JPanel createGraphicPanel(JGraph component,String graphTitle){
 		final JPanel panel = new JPanel(new BorderLayout());
 		ImageIcon icon = new ImageIcon("dialogCloseButton.png");
