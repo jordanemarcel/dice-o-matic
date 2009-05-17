@@ -12,9 +12,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import fr.umlv.ig.cheatir.loader.DiceClassLoader;
-import fr.umlv.ig.dice.Dice;
-import fr.umlv.ig.dice.FairDice;
-import fr.umlv.ig.dice.FakeDice;
+import fr.umlv.ig.misc.Dice;
+import fr.umlv.ig.misc.FairDice;
+import fr.umlv.ig.misc.FakeDice;
 
 /**
  * This class is a model used to store all loaded dice class and the number
@@ -30,8 +30,8 @@ public class DiceModel {
 	/**
 	 * Constructs a new DiceModel. By default this model contains two type of
 	 * dice :
-	 * - {@link fr.umlv.ig.dice.FairDice}
-	 * - {@link fr.umlv.ig.dice.FakeDice}
+	 * - {@link fr.umlv.ig.misc.FairDice}
+	 * - {@link fr.umlv.ig.misc.FakeDice}
 	 */
 	public DiceModel() {
 		this.diceMap.put(FairDice.class, 0);

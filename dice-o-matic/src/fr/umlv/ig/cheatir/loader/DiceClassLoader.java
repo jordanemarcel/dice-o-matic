@@ -4,17 +4,17 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import fr.umlv.ig.dice.Dice;
-import fr.umlv.ig.dice.DiceDescription;
+import fr.umlv.ig.misc.Dice;
+import fr.umlv.ig.misc.DiceDescription;
 
 /**
  * This is a special implementation of URLClassLoader, in fact this class loader
  * can load only classes with some specification. 
  * This class should :
- * <li>implements {@link fr.umlv.ig.dice.Dice} interface</li>
+ * <li>implements {@link fr.umlv.ig.misc.Dice} interface</li>
  * <li>have only ONE constructor</li>
  * <li>constructor parameter should be int, float or String and nothing else</li>
- * <li>the constructor should be annotate with {@link fr.umlv.ig.dice.DiceDescription} annotation</li>
+ * <li>the constructor should be annotate with {@link fr.umlv.ig.misc.DiceDescription} annotation</li>
  * </ul>
  * @author Clement Lebreton & Jordane Marcel
  */
