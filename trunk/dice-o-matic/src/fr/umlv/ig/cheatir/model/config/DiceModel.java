@@ -12,9 +12,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import fr.umlv.ig.cheatir.loader.DiceClassLoader;
-import fr.umlv.ig.misc.Dice;
-import fr.umlv.ig.misc.FairDice;
-import fr.umlv.ig.misc.FakeDice;
+import fr.umlv.ig.dice.Dice;
+import fr.umlv.ig.dice.FairDice;
+import fr.umlv.ig.dice.FakeDice;
 
 /**
  * This class is a model used to store all loaded dice class and the number
@@ -30,8 +30,8 @@ public class DiceModel {
 	/**
 	 * Constructs a new DiceModel. By default this model contains two type of
 	 * dice :
-	 * - {@link fr.umlv.ig.misc.FairDice}
-	 * - {@link fr.umlv.ig.misc.FakeDice}
+	 * - {@link fr.umlv.ig.dice.FairDice}
+	 * - {@link fr.umlv.ig.dice.FakeDice}
 	 */
 	public DiceModel() {
 		this.diceMap.put(FairDice.class, 0);
@@ -73,6 +73,9 @@ public class DiceModel {
 		fireElementAdded();
 	}
 	
+	/**
+	 * This method is called if a dice has been added
+	 */
 	protected void fireElementAdded() {
 		try {
 			firing = true;
@@ -85,6 +88,9 @@ public class DiceModel {
 		}
 	}
 	
+	/**
+	 * This method is called if the number of a dice has been changed
+	 */
 	protected void fireDiceValueChanged() {
 		try {
 			firing = true;
@@ -97,6 +103,11 @@ public class DiceModel {
 		}
 	}
 	
+	/**
+	 * Return the given dice at the given index
+	 * @param index - the given index
+	 * @return the requested dice
+	 */
 	public Object getElementAt(int index) {
 		if(index>=this.getSize())
 			throw new ArrayIndexOutOfBoundsException("Trying to access an object out of bounds!");
@@ -128,6 +139,11 @@ public class DiceModel {
 		
 		fireDiceValueChanged();
 	}
+	
+	/**
+	 * Return the total number of Dice
+	 * @return the total number of dice
+	 */
 	public int getTotalDiceNumber(){
 		Iterator<Class<? extends Dice>> it = getIterator();
 		int sum = 0;
@@ -137,6 +153,11 @@ public class DiceModel {
 		}
 		return sum;
 	}
+	
+	/**
+	 * Returns an iterator of the dice list
+	 * @return an Iterator of Dice class
+	 */
 	public Iterator<Class<? extends Dice>> getIterator() {
 		return diceMap.keySet().iterator();
 	}
@@ -155,6 +176,11 @@ public class DiceModel {
 		return false;
 	}
 
+	/**
+	 * This methods is called when adding a Jar file to the DiceModel.
+	 * Each valid Dice class inside this Jar file will be added.
+	 * @param jarAbsolutePath - the absolute path of the given jar
+	 */
 	@SuppressWarnings("unchecked")
 	public void addJar(String jarAbsolutePath) {
 		File file = new File(jarAbsolutePath);

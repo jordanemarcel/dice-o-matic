@@ -6,7 +6,7 @@ import java.util.List;
 
 import fr.umlv.ig.cheatir.model.graph.ThrowModel;
 import fr.umlv.ig.cheatir.model.graph.TotalThrowModel;
-import fr.umlv.ig.misc.Dice;
+import fr.umlv.ig.dice.Dice;
 
 
 /**

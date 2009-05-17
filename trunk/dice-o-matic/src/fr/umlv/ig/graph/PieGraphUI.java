@@ -39,7 +39,7 @@ public class PieGraphUI extends GraphUI{
 	public PieGraphUI(JComponent c){
 		graph = (JGraph) c;
 		Insets insets = c.getInsets();
-		int h = 200-insets.top-insets.bottom;
+		int h = 200-insets.left-insets.right;
 		int separator = h/10;
 		TableModel model = graph.getModel();
 		int row = model.getRowCount();
@@ -257,10 +257,6 @@ public class PieGraphUI extends GraphUI{
 					break;
 				sum = sum + val;
 			}
-			if(xPos<1000) {
-				System.out.println("Position: " + xPos);
-				System.out.println("Position: " + xPos);
-			}
 			Ellipse2D circle = new Ellipse2D.Double(xPos,yPos,graphRaduis,graphRaduis);
 			circleList.add(circle);
 			String[] legendText = new String[model.getColumnCount()];
@@ -271,9 +267,9 @@ public class PieGraphUI extends GraphUI{
 				if(sum==0)//Should not be possible
 					return;
 				arcAngle = (val*360)/sum ;
-				g2.setColor(graph.getColor());
 				if(i==col-1)
 					arcAngle=360-startAngle;
+				g2.setColor(graph.getColor());
 				g2.fillArc(xPos, yPos, graphRaduis, graphRaduis,(int)startAngle, (int)arcAngle);
 				startAngle = startAngle + arcAngle;
 				legendText[i]=i+1+" :"+val+"=>"+roundOff((double)val*100/(double)sum)+"%";
@@ -299,5 +295,7 @@ public class PieGraphUI extends GraphUI{
 			g2.drawRect(legendShape.x, legendShape.y, legendShape.width, legendShape.height);
 		}
 	}
-	private double roundOff(double val) {return (Math.floor(val*100.0))/100;} 
+	private double roundOff(double val) {
+		return (Math.floor(val*100.0))/100;
+	} 
 }

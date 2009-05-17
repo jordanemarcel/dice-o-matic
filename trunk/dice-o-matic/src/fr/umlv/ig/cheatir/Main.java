@@ -22,7 +22,7 @@ import fr.umlv.ig.cheatir.model.config.DiceModel;
 
 public class Main {
 	static boolean currentSession = false;
-	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(new MyMetalLnF());
 		} catch (UnsupportedLookAndFeelException e) {
