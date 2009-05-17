@@ -4,16 +4,17 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import fr.umlv.ig.misc.Dice;
-import fr.umlv.ig.misc.DiceDescription;
+import fr.umlv.ig.dice.Dice;
+import fr.umlv.ig.dice.DiceDescription;
+
 /**
  * This is a special implementation of URLClassLoader, in fact this class loader
- * can load only class with some specification. 
+ * can load only classes with some specification. 
  * This class should :
- * <li>implements {@link fr.umlv.ig.misc.Dice} interface</li>
+ * <li>implements {@link fr.umlv.ig.dice.Dice} interface</li>
  * <li>have only ONE constructor</li>
  * <li>constructor parameter should be int, float or String and nothing else</li>
- * <li>the constructor should be annotate with {@link fr.umlv.ig.misc.DiceDescription} annotation</li>
+ * <li>the constructor should be annotate with {@link fr.umlv.ig.dice.DiceDescription} annotation</li>
  * </ul>
  * @author Clement Lebreton & Jordane Marcel
  */
@@ -25,6 +26,7 @@ public class DiceClassLoader extends URLClassLoader{
 	public DiceClassLoader(URL[] urls) {
 		super(urls);
 	}
+	
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		try{
@@ -35,6 +37,7 @@ public class DiceClassLoader extends URLClassLoader{
 			throw new ClassNotFoundException(e.getMessage());
 		}
 	}
+	
 	private static boolean isDiceClass(Class<?> diceClass,boolean useBoolean){
 		boolean haveDiceInterface=false;
 		for (Class<?> clazz :diceClass.getInterfaces()){
@@ -75,8 +78,9 @@ public class DiceClassLoader extends URLClassLoader{
 		}
 		return true;
 	}
+	
 	/**
-	 * Returns if the given class is available for be load by this classLoader
+	 * Returns if the given class is available to be load by this classLoader
 	 * @param diceClass the checked class
 	 * @return true if this class if available, false otherwise. More formally, to be available 
 	 * this class should : 
