@@ -182,15 +182,17 @@ public class JGraph extends JComponent implements Scrollable{
 			int orientation, int direction) {
 		return 10;
 	}
-	/* (non-Javadoc)
-	 * @see javax.swing.JComponent#getMaximumSize()
+	/**
+	 * Returns the maximum size of the current UI
+	 * @return a Dimension object which contains the maximum size
 	 */
 	@Override
 	public Dimension getMaximumSize() {
 		return UIManager.getUI(this).getMaximumSize(this);
 	}
-	/* (non-Javadoc)
-	 * @see javax.swing.JComponent#getPreferredSize()
+	/**
+	 * Returns the preferred size of the current UI
+	 * @return a Dimension object which contains the preferred size
 	 */
 	@Override
 	public Dimension getPreferredSize() {
