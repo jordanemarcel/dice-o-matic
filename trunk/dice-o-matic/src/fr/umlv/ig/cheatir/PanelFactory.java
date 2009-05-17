@@ -71,11 +71,11 @@ import fr.umlv.ig.cheatir.model.graph.DiceSelectorModel;
 import fr.umlv.ig.cheatir.model.graph.PrintListModel;
 import fr.umlv.ig.cheatir.model.graph.StatDiceModel;
 import fr.umlv.ig.cheatir.model.graph.TotalThrowModel;
-import fr.umlv.ig.dice.Dice;
-import fr.umlv.ig.dice.DiceDescription;
-import fr.umlv.ig.dice.FairDice;
 import fr.umlv.ig.graph.JGraph;
 import fr.umlv.ig.graph.JGraph.GraphType;
+import fr.umlv.ig.misc.Dice;
+import fr.umlv.ig.misc.DiceDescription;
+import fr.umlv.ig.misc.FairDice;
 /**
  * The CheatIr panel factory. This factory enable to create all panel
  * for this application.

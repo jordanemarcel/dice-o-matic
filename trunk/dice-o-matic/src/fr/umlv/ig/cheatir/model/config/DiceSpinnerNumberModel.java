@@ -4,7 +4,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import fr.umlv.ig.dice.Dice;
+import fr.umlv.ig.misc.Dice;
 
 /**
  * This class is an adapter of the DiceModel. It extends the SpinnerNumberModel to be
